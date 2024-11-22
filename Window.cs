@@ -13,10 +13,10 @@ namespace ComputerGraphics3
         private readonly float[] _vertices =
         {
             // Position         Texture coordinates
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
-             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
+             0.5f,  0.5f, 0.0f, // top right
+             0.5f, -0.5f, 0.0f, // bottom right
+            -0.5f, -0.5f, 0.0f, // bottom left
+            -0.5f,  0.5f, 0.0f  // top left
         };
 
         private readonly uint[] _indices =
@@ -29,14 +29,15 @@ namespace ComputerGraphics3
         private int _vertexBufferObject;
         private int _vertexArrayObject;
 
-        private Shader _shader;
-        private Texture _texture;
+        private Shader shader;
+        private Texture texture;
 
-        private Camera _camera;
+        private Camera cam;
         private bool _firstMove = true;
         private Vector2 _lastPos;
 
         private Randomizer rando;
+        private Room room;
 
         private double _time;
 
@@ -53,7 +54,6 @@ namespace ComputerGraphics3
             base.OnLoad();
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
             GL.Enable(EnableCap.DepthTest);
 
             _vertexArrayObject = GL.GenVertexArray();
@@ -67,25 +67,28 @@ namespace ComputerGraphics3
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-            _shader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.frag");
-            _shader.Use();
+            shader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.frag");
+            shader.Use();
 
-            var vertexLocation = _shader.GetAttribLocation("aPosition");
+            var vertexLocation = shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/container.png");
-            _texture.Use(TextureUnit.Texture0);
-
-            _shader.SetInt("texture0", 0);
+            texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/container.png");
+            texture.Use(TextureUnit.Texture0);
+            //shader.SetInt("texture0", 0);
             
-            _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+            cam = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
             CursorState = CursorState.Grabbed;
+
+            room = new Room(shader, texture);
+            room.Scale(new Vector3(10.0f, 10.0f, 10.0f));
+            cam = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -94,7 +97,7 @@ namespace ComputerGraphics3
 
             GL.Viewport(0, 0, Size.X, Size.Y);
             // We need to update the aspect ratio once the window has been resized.
-            _camera.AspectRatio = Size.X / (float)Size.Y;
+            cam.AspectRatio = Size.X / (float)Size.Y;
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -118,28 +121,28 @@ namespace ComputerGraphics3
 
             if (input.IsKeyDown(Keys.W))
             {
-                _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
+                cam.Position += cam.Front * cameraSpeed * (float)e.Time; // Forward
             }
 
             if (input.IsKeyDown(Keys.S))
             {
-                _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
+                cam.Position -= cam.Front * cameraSpeed * (float)e.Time; // Backwards
             }
             if (input.IsKeyDown(Keys.A))
             {
-                _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
+                cam.Position -= cam.Right * cameraSpeed * (float)e.Time; // Left
             }
             if (input.IsKeyDown(Keys.D))
             {
-                _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
+                cam.Position += cam.Right * cameraSpeed * (float)e.Time; // Right
             }
             if (input.IsKeyDown(Keys.Space))
             {
-                _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
+                cam.Position += cam.Up * cameraSpeed * (float)e.Time; // Up
             }
             if (input.IsKeyDown(Keys.LeftShift))
             {
-                _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
+                cam.Position -= cam.Up * cameraSpeed * (float)e.Time; // Down
             }
             if (input.IsKeyDown(Keys.H))
             {
@@ -165,8 +168,8 @@ namespace ComputerGraphics3
                 _lastPos = new Vector2(mouse.X, mouse.Y);
 
                 // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
-                _camera.Yaw += deltaX * sensitivity;
-                _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
+                cam.Yaw += deltaX * sensitivity;
+                cam.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
         }
 
@@ -179,16 +182,17 @@ namespace ComputerGraphics3
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use(TextureUnit.Texture0);
-            _shader.Use();
+            texture.Use(TextureUnit.Texture0);
+            shader.Use();
 
             var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
-            _shader.SetMatrix4("model", model);
-            _shader.SetMatrix4("view", _camera.GetViewMatrix());
-            _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            shader.SetMatrix4("model", model);
+            shader.SetMatrix4("view", cam.GetViewMatrix());
+            shader.SetMatrix4("projection", cam.GetProjectionMatrix());
 
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
-            
+            //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+
+            room.Render(cam);
 
             SwapBuffers();
         }
