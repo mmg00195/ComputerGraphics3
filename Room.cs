@@ -3,8 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.ES20;
 using OpenTK.Mathematics;
+using BufferTarget = OpenTK.Graphics.OpenGL4.BufferTarget;
+using BufferUsageHint = OpenTK.Graphics.OpenGL4.BufferUsageHint;
+using DrawElementsType = OpenTK.Graphics.OpenGL4.DrawElementsType;
+using GL = OpenTK.Graphics.OpenGL4.GL;
+using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
+using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
+using VertexAttribPointerType = OpenTK.Graphics.OpenGL4.VertexAttribPointerType;
 
 namespace ComputerGraphics3
 {
@@ -37,14 +44,14 @@ namespace ComputerGraphics3
         private Texture _texture;
 
         public Matrix4 ModelMatrix { get; private set; }
-
+        //public BoundingBox boundingbox { get; private set; }
         public Room(Shader shader, Texture texture)
         {
             _shader = shader;
             _texture = texture;
 
             ModelMatrix = Matrix4.Identity;
-
+            BoundingBox
             SetupBuffers();
         }
 
