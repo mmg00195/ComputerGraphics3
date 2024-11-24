@@ -10,9 +10,6 @@ namespace ComputerGraphics3
 {
     public class Window : GameWindow
     {
-        private int _elementBufferObject;
-        private int _vertexBufferObject;
-        private int _vertexArrayObject;
 
         private Shader shader;
         private Texture texture;
@@ -24,7 +21,11 @@ namespace ComputerGraphics3
         private Randomizer rando;
         private Room room;
 
-        private double _time;
+        //private BoundingBox _playerBoundingBox;
+        //private Vector3 _playerPosition;
+
+
+        //private double _time;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -44,17 +45,10 @@ namespace ComputerGraphics3
             shader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.frag");
             shader.Use();
 
-            var vertexLocation = shader.GetAttribLocation("aPosition");
-            GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-
-            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
-            GL.EnableVertexAttribArray(texCoordLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
-
+            
             texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/container.png");
             texture.Use(TextureUnit.Texture0);
-            //shader.SetInt("texture0", 0);
+            shader.SetInt("texture0", 0);
             
             cam = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
@@ -62,7 +56,10 @@ namespace ComputerGraphics3
 
             room = new Room(shader, texture);
             room.Scale(new Vector3(10.0f, 10.0f, 10.0f));
-            cam = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+
+            //_playerPosition = new Vector3(0, 0, 0);
+            //_playerBoundingBox = new BoundingBox(new Vector3(0, 0, 0), new Vector3(0.5f, 0.5f, 0.5f));
+
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -96,7 +93,14 @@ namespace ComputerGraphics3
             if (input.IsKeyDown(Keys.W))
             {
                 cam.Position += cam.Front * cameraSpeed * (float)e.Time; // Forward
+                //_playerBoundingBox.Update(_playerBoundingBox.Min + new Vector3(0, 0, -0.1f), _playerBoundingBox.Max);
             }
+
+            // Verifica colisión con la habitación
+            /*if (room.boundingbox.Intersects(_playerBoundingBox))
+            {
+                Console.WriteLine("Player collided with the room!");
+            }*/
 
             if (input.IsKeyDown(Keys.S))
             {
@@ -145,25 +149,35 @@ namespace ComputerGraphics3
                 cam.Yaw += deltaX * sensitivity;
                 cam.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
+
+            /*_playerPosition += cam.Position;
+            _playerBoundingBox.Update(_playerPosition, new Vector3(0.5f, 0.5f, 0.5f));
+            if (room.boundingbox.Intersects(_playerBoundingBox))
+            {
+                Console.WriteLine("Player collided with the room!");
+            }
+            else
+            {
+                _playerBoundingBox.Update(_playerPosition, new Vector3(0.5f, 0.5f, 0.5f));
+            }*/
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
 
-            _time += 4.0 * e.Time;
+            //_time += 4.0 * e.Time;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.BindVertexArray(_vertexArrayObject);
 
             texture.Use(TextureUnit.Texture0);
             shader.Use();
 
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
+            /*var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
             shader.SetMatrix4("model", model);
             shader.SetMatrix4("view", cam.GetViewMatrix());
             shader.SetMatrix4("projection", cam.GetProjectionMatrix());
-
+            */
             //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             room.Render(cam);
@@ -176,7 +190,7 @@ namespace ComputerGraphics3
             Console.WriteLine("\n");
             Console.WriteLine(" (H) - help menu");
             Console.WriteLine(" (ESC) - stop aplication");
-            Console.WriteLine(" (B) - toggle grid colour");
+            Console.WriteLine(" (B) - toggle landscape colour");
             //Console.WriteLine(" (V) - toggle grid visibilit");
             Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
         }

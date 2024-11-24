@@ -7,7 +7,7 @@ using OpenTK.Mathematics;
 
 namespace ComputerGraphics3
 {
-    class BoundingBox
+    public class BoundingBox
     {
         public Vector3 Min { get; private set; }
         public Vector3 Max { get; private set; }

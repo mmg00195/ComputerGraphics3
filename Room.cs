@@ -51,7 +51,7 @@ namespace ComputerGraphics3
             _texture = texture;
 
             ModelMatrix = Matrix4.Identity;
-            BoundingBox
+            //boundingbox = new BoundingBox(Vector3.Zero, new Vector3(1.0f, 1.0f, 1.0f));
             SetupBuffers();
         }
 
@@ -96,16 +96,28 @@ namespace ComputerGraphics3
         public void Translate(Vector3 translation)
         {
             ModelMatrix *= Matrix4.CreateTranslation(translation);
+            //UpdateBoundingBox();
         }
 
         public void Rotate(float angle, Vector3 axis)
         {
             ModelMatrix *= Matrix4.CreateFromAxisAngle(axis, MathHelper.DegreesToRadians(angle));
+            //UpdateBoundingBox();
         }
 
         public void Scale(Vector3 scale)
         {
             ModelMatrix *= Matrix4.CreateScale(scale);
+            //UpdateBoundingBox();
         }
+        /*private void UpdateBoundingBox()
+        {
+            // Extrae la posición y escala desde la matriz de modelo
+            Vector3 position = ModelMatrix.ExtractTranslation();
+            Vector3 scale = ModelMatrix.ExtractScale();
+
+            // Actualiza la BoundingBox con la posición y escala actuales
+            boundingbox.Update(position, scale);
+        }*/
     }
 }
