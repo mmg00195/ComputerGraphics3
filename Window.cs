@@ -146,6 +146,10 @@ namespace ComputerGraphics3
             {
                 obj1.ToggleVisibility();
             }
+            if (input.IsKeyPressed(Keys.X))
+            {
+                obj1.ToggleWireframeMode();
+            }
 
             var mouse = MouseState;
 
@@ -227,6 +231,7 @@ namespace ComputerGraphics3
             Console.WriteLine(" (B) - toggle landscape colour");
             Console.WriteLine(" (C) - toggle object colour");
             Console.WriteLine(" (V) - toggle object visibility");
+            Console.WriteLine(" (X) - toggle object Wireframe Mode");
             Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
         }
     }

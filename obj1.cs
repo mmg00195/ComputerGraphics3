@@ -19,6 +19,7 @@ namespace ComputerGraphics3
         private Color color;
         private Randomizer rando;
         private bool visibility;
+        private bool wireframe;
 
         public Matrix4 ModelMatrix { get; private set; }
 
@@ -50,6 +51,7 @@ namespace ComputerGraphics3
             rando = new Randomizer();
             color = rando.RandomColor();
             visibility = true;
+            wireframe = false;
 
             ModelMatrix = Matrix4.Identity;
 
@@ -96,8 +98,21 @@ namespace ComputerGraphics3
             _shader.SetMatrix4("projection", camera.GetProjectionMatrix());
 
             GL.BindVertexArray(_vao);
-            if(visibility)
+
+            if (wireframe)
+            {
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            }
+            else
+            {
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            }
+
+            if (visibility)
+            {
                 GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            }
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         }
 
         public void Translate(Vector3 translation)
@@ -123,6 +138,11 @@ namespace ComputerGraphics3
         public void ToggleVisibility()
         {
             visibility = !visibility;
+        }
+
+        public void ToggleWireframeMode()
+        {
+            wireframe = !wireframe;
         }
     }
 }
