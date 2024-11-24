@@ -18,6 +18,7 @@ namespace ComputerGraphics3
         private Shader _shader;
         private Color color;
         private Randomizer rando;
+        private bool visibility;
 
         public Matrix4 ModelMatrix { get; private set; }
 
@@ -48,6 +49,7 @@ namespace ComputerGraphics3
             _shader = shader;
             rando = new Randomizer();
             color = rando.RandomColor();
+            visibility = true;
 
             ModelMatrix = Matrix4.Identity;
 
@@ -94,7 +96,8 @@ namespace ComputerGraphics3
             _shader.SetMatrix4("projection", camera.GetProjectionMatrix());
 
             GL.BindVertexArray(_vao);
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            if(visibility)
+                GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
         }
 
         public void Translate(Vector3 translation)
@@ -115,6 +118,11 @@ namespace ComputerGraphics3
         public void ToggleColor()
         {
             this.color = rando.RandomColor();
+        }
+
+        public void ToggleVisibility()
+        {
+            visibility = !visibility;
         }
     }
 }

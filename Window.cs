@@ -142,6 +142,10 @@ namespace ComputerGraphics3
             {
                 obj1.ToggleColor();
             }
+            if (input.IsKeyPressed(Keys.V))
+            {
+                obj1.ToggleVisibility();
+            }
 
             var mouse = MouseState;
 
@@ -221,7 +225,8 @@ namespace ComputerGraphics3
             Console.WriteLine(" (H) - help menu");
             Console.WriteLine(" (ESC) - stop aplication");
             Console.WriteLine(" (B) - toggle landscape colour");
-            //Console.WriteLine(" (V) - toggle grid visibilit");
+            Console.WriteLine(" (C) - toggle object colour");
+            Console.WriteLine(" (V) - toggle object visibility");
             Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
         }
     }
