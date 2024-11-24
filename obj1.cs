@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace ComputerGraphics3
 {
@@ -20,6 +22,8 @@ namespace ComputerGraphics3
         private Randomizer rando;
         private bool visibility;
         private bool wireframe;
+        private bool gravity;
+        private const int GRAVITY_OFFSET = 3000;
 
         public Matrix4 ModelMatrix { get; private set; }
 
@@ -52,6 +56,7 @@ namespace ComputerGraphics3
             color = rando.RandomColor();
             visibility = true;
             wireframe = false;
+            gravity = false;
 
             ModelMatrix = Matrix4.Identity;
 
@@ -118,9 +123,10 @@ namespace ComputerGraphics3
         public void Translate(Vector3 translation)
         {
             ModelMatrix *= Matrix4.CreateTranslation(translation);
+            
         }
 
-        public void Rotate(float angle, Vector3 axis)
+        public void Rotate(float angle, Vector3 axis)//?????????
         {
             ModelMatrix *= Matrix4.CreateFromAxisAngle(axis, MathHelper.DegreesToRadians(angle));
         }
@@ -144,5 +150,18 @@ namespace ComputerGraphics3
         {
             wireframe = !wireframe;
         }
+
+        public void ToggleGravity()
+        {
+            gravity = !gravity;
+        }
+        public void Update(float deltaTime)
+        {
+            if (gravity)
+            {
+                Translate((Vector3.Zero +new Vector3(0,-GRAVITY_OFFSET,0) * deltaTime)*deltaTime);
+            }
+        }
+
     }
 }

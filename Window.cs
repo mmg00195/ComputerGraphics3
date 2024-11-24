@@ -150,7 +150,17 @@ namespace ComputerGraphics3
             {
                 obj1.ToggleWireframeMode();
             }
+            if (input.IsKeyPressed(Keys.G))
+            {
+                obj1.ToggleGravity();
+            }
 
+            float deltaTime = (float)e.Time;
+            obj1.Update(deltaTime);
+            
+            
+            
+            //mouse
             var mouse = MouseState;
 
             if (_firstMove) // This bool variable is initially set to true.
@@ -232,6 +242,7 @@ namespace ComputerGraphics3
             Console.WriteLine(" (C) - toggle object colour");
             Console.WriteLine(" (V) - toggle object visibility");
             Console.WriteLine(" (X) - toggle object Wireframe Mode");
+            Console.WriteLine(" (G) - toggle object Gravity");
             Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
         }
     }
