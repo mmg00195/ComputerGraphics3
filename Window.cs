@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -12,6 +13,7 @@ namespace ComputerGraphics3
     {
 
         private Shader shader;
+        private Shader shader2;
         private Texture texture;
 
         private Camera cam;
@@ -21,6 +23,7 @@ namespace ComputerGraphics3
         private Randomizer rando;
         private Room room;
 
+        private obj1 obj1;
         //private BoundingBox _playerBoundingBox;
         //private Vector3 _playerPosition;
 
@@ -59,6 +62,10 @@ namespace ComputerGraphics3
 
             //_playerPosition = new Vector3(0, 0, 0);
             //_playerBoundingBox = new BoundingBox(new Vector3(0, 0, 0), new Vector3(0.5f, 0.5f, 0.5f));
+            shader2 = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader_solid.frag");
+            shader2.Use();
+            shader2.SetInt("objectColor",0);
+            obj1 = new obj1(shader2);
 
         }
 
@@ -81,6 +88,7 @@ namespace ComputerGraphics3
             }
 
             var input = KeyboardState;
+            var mouseinput = MouseState;
 
             if (input.IsKeyDown(Keys.Escape))
             {
@@ -126,9 +134,13 @@ namespace ComputerGraphics3
             {
                 DisplayHelp();
             }
-            if (input.IsKeyDown(Keys.B))
+            if (input.IsKeyPressed(Keys.B))
             {
                 GL.ClearColor(rando.RandomColor());
+            }
+            if (input.IsKeyPressed(Keys.C))
+            {
+                obj1.ToggleColor();
             }
 
             var mouse = MouseState;
@@ -160,6 +172,22 @@ namespace ComputerGraphics3
             {
                 _playerBoundingBox.Update(_playerPosition, new Vector3(0.5f, 0.5f, 0.5f));
             }*/
+            if (mouseinput.IsButtonDown(MouseButton.Left))
+            {
+                if (input.IsKeyDown(Keys.W))
+                    obj1.Translate(-Vector3.UnitZ * cameraSpeed * (float)e.Time);
+                if (input.IsKeyDown(Keys.S))
+                    obj1.Translate(Vector3.UnitZ * cameraSpeed * (float)e.Time);
+                if (input.IsKeyDown(Keys.A))
+                    obj1.Translate(-Vector3.UnitX * cameraSpeed * (float)e.Time);
+                if (input.IsKeyDown(Keys.D))
+                    obj1.Translate(Vector3.UnitX * cameraSpeed * (float)e.Time);
+                if (input.IsKeyDown(Keys.Space))
+                    obj1.Translate(Vector3.UnitY * cameraSpeed * (float)e.Time);
+                if (input.IsKeyDown(Keys.LeftShift))
+                    obj1.Translate(-Vector3.UnitY * cameraSpeed * (float)e.Time);
+
+            }
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -172,6 +200,7 @@ namespace ComputerGraphics3
 
             texture.Use(TextureUnit.Texture0);
             shader.Use();
+            shader2.Use();
 
             /*var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
             shader.SetMatrix4("model", model);
@@ -179,8 +208,9 @@ namespace ComputerGraphics3
             shader.SetMatrix4("projection", cam.GetProjectionMatrix());
             */
             //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
-
             room.Render(cam);
+            obj1.Render(cam);
+
 
             SwapBuffers();
         }

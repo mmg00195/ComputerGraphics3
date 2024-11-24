@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Drawing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
@@ -182,8 +183,13 @@ namespace ComputerGraphics3
         /// <param name="data">The data to set</param>
         public void SetVector3(string name, Vector3 data)
         {
-            GL.UseProgram(Handle);
             GL.Uniform3(_uniformLocations[name], data);
         }
+
+        public void SetColor(string name, Color color)
+        {
+            SetVector3(name, new Vector3(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f));
+        }
+
     }
 }
