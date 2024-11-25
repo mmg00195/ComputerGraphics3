@@ -169,12 +169,24 @@ namespace ComputerGraphics3
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
+            if (input.IsKeyPressed(Keys.D3))
+            {
+                polygon.Add(new obj1(shader2, 3));
+                polnum = polygon.Count - 1;
+                polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
+            }
             if (input.IsKeyPressed(Keys.LeftAlt))
             {
                 if (polnum == polygon.Count - 1)
                     polnum = 0;
                 else
                     polnum += 1;
+            }
+
+            if (input.IsKeyDown(Keys.M))
+            {
+                foreach (obj1 pol in polygon)
+                    pol.DiscoMode();
             }
             float deltaTime = (float)e.Time;
             polygon[polnum].Update(deltaTime);
@@ -258,18 +270,24 @@ namespace ComputerGraphics3
         private void DisplayHelp()
         {
             Console.WriteLine("\n");
+            Console.WriteLine("__________App Tools_________");
             Console.WriteLine(" (H) - help menu");
-            Console.WriteLine(" (ESC) - stop aplication");
+            Console.WriteLine(" (ESC) - stop application");
             Console.WriteLine(" (B) - toggle landscape colour");
+            Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
+            Console.WriteLine("\n");
+            Console.WriteLine("__________Object Tools_________");
+            Console.WriteLine(" (LefttClick) - selected pol movement");
+            Console.WriteLine(" (LeftAlt) - select form");
+            Console.WriteLine(" (1,2,3) - add new form");
             Console.WriteLine(" (C) - toggle object colour");
             Console.WriteLine(" (V) - toggle object visibility");
-            Console.WriteLine(" (X) - toggle object Wireframe Mode");
+            Console.WriteLine(" (X) - toggle object Wireframe/Surface Mode");
             Console.WriteLine(" (G) - toggle object Gravity");
-            Console.WriteLine(" (LefttClick) - selected pol movement");
-            Console.WriteLine(" (RightClick) - add new pol");
-            Console.WriteLine(" (LeftAlt) - select new pol");
-            Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
-            //Console.WriteLine(" (R) - block directional camera movement");
+            Console.WriteLine(" (LeftAlt) - select new form");
+            Console.WriteLine("\n");
+            Console.WriteLine("__________Surprises_________");
+            Console.WriteLine(" (Hold M(spawn plenty of objects)) - Manu Surprise");
 
         }
     }

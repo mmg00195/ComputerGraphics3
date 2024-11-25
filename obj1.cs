@@ -24,6 +24,8 @@ namespace ComputerGraphics3
         private bool wireframe;
         private bool gravity;
         private const int GRAVITY_OFFSET = 3000;
+        private int sectorCount = 36;
+        private int stackCount = 18;
 
         private readonly Vector3 roomMin = new Vector3(-5.0f, -5.0f, -5.0f); // Límite inferior
         private readonly Vector3 roomMax = new Vector3(5.0f, 5.0f, 5.0f);   // Límite superior
@@ -36,61 +38,62 @@ namespace ComputerGraphics3
         {
             float[] vertices = new float[]{};
             uint[] indices = new uint[]{};
-            if (polygonType == 1)
+            switch (polygonType)
             {
-                //Cube
-                vertices = new float[]
-                {
-                    // Positions          // Texture coordinates
-                    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // Back face
-                    0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-                    0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-                    -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-                    -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, // Front face
-                    0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-                    0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-                    -0.5f, 0.5f, 0.5f, 0.0f, 1.0f
-                };
+                case 1:
+                    vertices = new float[]
+                    {
+                        // Positions          // Texture coordinates
+                        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // Back face
+                        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+                        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+                        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+                        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, // Front face
+                        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+                        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+                        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f
+                    };
 
-                indices = new uint[]
-                {
-                    0, 1, 2, 2, 3, 0, // Back face
-                    4, 5, 6, 6, 7, 4, // Front face
-                    0, 1, 5, 5, 4, 0, // Bottom face
-                    2, 3, 7, 7, 6, 2, // Top face
-                    0, 3, 7, 7, 4, 0, // Left face
-                    1, 2, 6, 6, 5, 1 // Right face
-                };
-            }
-            else
-            {
-                if (polygonType == 2) {
+                    indices = new uint[]
+                    {
+                        0, 1, 2, 2, 3, 0, // Back face
+                        4, 5, 6, 6, 7, 4, // Front face
+                        0, 1, 5, 5, 4, 0, // Bottom face
+                        2, 3, 7, 7, 6, 2, // Top face
+                        0, 3, 7, 7, 4, 0, // Left face
+                        1, 2, 6, 6, 5, 1 // Right face
+                    };
+                    break;
+                case 2:
                     // Piramid
                     vertices = new float[]
                     {
-                    // Positions         // Texture coordinates
-                    -0.5f, 0.0f, -0.5f, 0.0f, 0.0f, // Base - V0
-                    0.5f, 0.0f, -0.5f, 1.0f, 0.0f, // Base - V1
-                    0.5f, 0.0f, 0.5f, 1.0f, 1.0f, // Base - V2
-                    -0.5f, 0.0f, 0.5f, 0.0f, 1.0f, // Base - V3
-                    0.0f, 1.0f, 0.0f, 0.5f, 0.5f // Ápice - V4
+                        // Positions         // Texture coordinates
+                        -0.5f, 0.0f, -0.5f, 0.0f, 0.0f, // Base - V0
+                        0.5f, 0.0f, -0.5f, 1.0f, 0.0f, // Base - V1
+                        0.5f, 0.0f, 0.5f, 1.0f, 1.0f, // Base - V2
+                        -0.5f, 0.0f, 0.5f, 0.0f, 1.0f, // Base - V3
+                        0.0f, 1.0f, 0.0f, 0.5f, 0.5f // Ápice - V4
                     };
 
                     // Índices para formar los triángulos
                     indices = new uint[]
                     {
-                    // Base cuadrada (dos triángulos)
-                    0, 1, 2,
-                    2, 3, 0,
+                        // Base cuadrada (dos triángulos)
+                        0, 1, 2,
+                        2, 3, 0,
 
-                    // Caras laterales (cada triángulo conecta el ápice con dos vértices de la base)
-                    0, 1, 4,
-                    1, 2, 4,
-                    2, 3, 4,
-                    3, 0, 4
+                        // Caras laterales (cada triángulo conecta el ápice con dos vértices de la base)
+                        0, 1, 4,
+                        1, 2, 4,
+                        2, 3, 4,
+                        3, 0, 4
                     };
-                }
-            } 
+                    break;
+                case 3:
+                    (vertices, indices) = GenerateSphere(sectorCount, stackCount);
+                    break;
+            }
 
             _vertices = vertices;
             _indices = indices;
@@ -104,6 +107,73 @@ namespace ComputerGraphics3
             ModelMatrix = Matrix4.Identity;
 
             SetupBuffers();
+        }
+
+        private (float[] vertices, uint[] indices)  GenerateSphere(int sectorCount, int stackCount)
+        {
+            float radius = 1.0f;
+            List<float> verticesSp = new List<float>();
+            List<uint> indicesSp = new List<uint>();
+
+            float x, y, z, xy;
+            float s, t;
+            float sectorStep = 2 * MathF.PI / sectorCount;
+            float stackStep = MathF.PI / stackCount;
+            float sectorAngle, stackAngle;
+
+            // Generar vértices
+            for (int i = 0; i <= stackCount; ++i)
+            {
+                stackAngle = MathF.PI / 2 - i * stackStep;
+                xy = radius * MathF.Cos(stackAngle);
+                z = radius * MathF.Sin(stackAngle);
+
+                for (int j = 0; j <= sectorCount; ++j)
+                {
+                    sectorAngle = j * sectorStep;
+
+                    // Coordenadas de vértices
+                    x = xy * MathF.Cos(sectorAngle);
+                    y = xy * MathF.Sin(sectorAngle);
+                    verticesSp.Add(x);
+                    verticesSp.Add(y);
+                    verticesSp.Add(z);
+
+                    // Coordenadas de textura
+                    s = (float)j / sectorCount;
+                    t = (float)i / stackCount;
+                    verticesSp.Add(s);
+                    verticesSp.Add(t);
+                }
+            }
+
+            // Generar índices
+            for (int i = 0; i < stackCount; ++i)
+            {
+                int k1 = i * (sectorCount + 1);
+                int k2 = k1 + sectorCount + 1;
+
+                for (int j = 0; j < sectorCount; ++j, ++k1, ++k2)
+                {
+                    if (i != 0)
+                    {
+                        indicesSp.Add((uint)k1);
+                        indicesSp.Add((uint)k2);
+                        indicesSp.Add((uint)(k1 + 1));
+                    }
+
+                    if (i != (stackCount - 1))
+                    {
+                        indicesSp.Add((uint)(k1 + 1));
+                        indicesSp.Add((uint)k2);
+                        indicesSp.Add((uint)(k2 + 1));
+                    }
+                }
+            }
+
+
+            return (verticesSp.ToArray(), indicesSp.ToArray());
+
         }
 
         private void SetupBuffers()
@@ -227,8 +297,11 @@ namespace ComputerGraphics3
 
             // Actualizar la posición del cubo en el modelo
             ModelMatrix = Matrix4.CreateTranslation(position);
-           
-
+            
+        }
+        public void DiscoMode()
+        {
+            color = rando.RandomColor();
         }
 
     }
