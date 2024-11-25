@@ -74,7 +74,10 @@ namespace ComputerGraphics3
 
             GL.Viewport(0, 0, Size.X, Size.Y);
             // We need to update the aspect ratio once the window has been resized.
-            cam.AspectRatio = Size.X / (float)Size.Y;
+            if (cam != null)
+            {
+                cam.AspectRatio = Size.X / (float)Size.Y;
+            }
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
