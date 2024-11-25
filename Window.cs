@@ -26,16 +26,16 @@ namespace ComputerGraphics3
 
         private obj1 obj1;
         private obj1 obj2;
-        private List<obj1> cubes;
-        int Cubenum;
+        private List<obj1> polygon;
+        int polnum;
 
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
         {
             rando = new Randomizer();
-            cubes = new List<obj1>();
-            Cubenum = 0;
+            polygon = new List<obj1>();
+            polnum = 0;
             DisplayHelp();
         }
 
@@ -65,7 +65,7 @@ namespace ComputerGraphics3
             shader2.Use();
             shader2.SetInt("objectColor",0);
 
-            cubes.Add(new obj1(shader2, rando.RandomInt(1, 3)));
+            polygon.Add(new obj1(shader2, rando.RandomInt(1, 3)));
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -143,35 +143,41 @@ namespace ComputerGraphics3
             }
             if (input.IsKeyPressed(Keys.C))
             {
-                cubes[Cubenum].ToggleColor();
+                polygon[polnum].ToggleColor();
             }
             if (input.IsKeyPressed(Keys.V))
             {
-                cubes[Cubenum].ToggleVisibility();
+                polygon[polnum].ToggleVisibility();
             }
             if (input.IsKeyPressed(Keys.X))
             {
-                cubes[Cubenum].ToggleWireframeMode();
+                polygon[polnum].ToggleWireframeMode();
             }
             if (input.IsKeyPressed(Keys.G))
             {
-                cubes[Cubenum].ToggleGravity();
+                polygon[polnum].ToggleGravity();
             }
-            if (mouseinput.IsButtonPressed(MouseButton.Right))
+            if (input.IsKeyPressed(Keys.D1))
             {
-                cubes.Add(new obj1(shader2,rando.RandomInt(1,3)));
-                Cubenum = cubes.Count - 1;
-                cubes[Cubenum].Translate(new Vector3(rando.RandomInt(-5,5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
+                polygon.Add(new obj1(shader2,1));
+                polnum = polygon.Count - 1;
+                polygon[polnum].Translate(new Vector3(rando.RandomInt(-5,5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
+            }
+            if (input.IsKeyPressed(Keys.D2))
+            {
+                polygon.Add(new obj1(shader2, 2));
+                polnum = polygon.Count - 1;
+                polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.LeftAlt))
             {
-                if (Cubenum == cubes.Count - 1)
-                    Cubenum = 0;
+                if (polnum == polygon.Count - 1)
+                    polnum = 0;
                 else
-                    Cubenum += 1;
+                    polnum += 1;
             }
             float deltaTime = (float)e.Time;
-            cubes[Cubenum].Update(deltaTime);
+            polygon[polnum].Update(deltaTime);
             
             
             
@@ -197,20 +203,20 @@ namespace ComputerGraphics3
             if (mouseinput.IsButtonDown(MouseButton.Left))
             {
                 if (input.IsKeyDown(Keys.W))
-                    cubes[Cubenum].Translate(-Vector3.UnitZ * cameraSpeed * (float)e.Time);
+                    polygon[polnum].Translate(-Vector3.UnitZ * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.S))
-                    cubes[Cubenum].Translate(Vector3.UnitZ * cameraSpeed * (float)e.Time);
+                    polygon[polnum].Translate(Vector3.UnitZ * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.A))
-                    cubes[Cubenum].Translate(-Vector3.UnitX * cameraSpeed * (float)e.Time);
+                    polygon[polnum].Translate(-Vector3.UnitX * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.D))
-                    cubes[Cubenum].Translate(Vector3.UnitX * cameraSpeed * (float)e.Time);
+                    polygon[polnum].Translate(Vector3.UnitX * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.Space))
-                    cubes[Cubenum].Translate(Vector3.UnitY * cameraSpeed * (float)e.Time);
+                    polygon[polnum].Translate(Vector3.UnitY * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.LeftShift))
-                    cubes[Cubenum].Translate(-Vector3.UnitY * cameraSpeed * (float)e.Time);
+                    polygon[polnum].Translate(-Vector3.UnitY * cameraSpeed * (float)e.Time);
 
-                //cubes[Cubenum].Rotate(deltaY, Vector3.UnitX);
-                //cubes[Cubenum].Rotate(deltaX, Vector3.UnitY);
+                //polygon[polnum].Rotate(deltaY, Vector3.UnitX);
+                //polygon[polnum].Rotate(deltaX, Vector3.UnitY);
 
             }
         }
@@ -240,9 +246,9 @@ namespace ComputerGraphics3
             */
             //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
             room.Render(cam);
-            foreach (obj1 cube in cubes)
+            foreach (obj1 pol in polygon)
             {
-                cube.Render(cam);
+                pol.Render(cam);
             }
 
 
@@ -259,9 +265,9 @@ namespace ComputerGraphics3
             Console.WriteLine(" (V) - toggle object visibility");
             Console.WriteLine(" (X) - toggle object Wireframe Mode");
             Console.WriteLine(" (G) - toggle object Gravity");
-            Console.WriteLine(" (LefttClick) - selected cube movement");
-            Console.WriteLine(" (RightClick) - add new cube");
-            Console.WriteLine(" (LeftAlt) - select new cube");
+            Console.WriteLine(" (LefttClick) - selected pol movement");
+            Console.WriteLine(" (RightClick) - add new pol");
+            Console.WriteLine(" (LeftAlt) - select new pol");
             Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
             //Console.WriteLine(" (R) - block directional camera movement");
 

@@ -27,7 +27,7 @@ namespace ComputerGraphics3
 
         private readonly Vector3 roomMin = new Vector3(-5.0f, -5.0f, -5.0f); // Límite inferior
         private readonly Vector3 roomMax = new Vector3(5.0f, 5.0f, 5.0f);   // Límite superior
-        private readonly Vector3 cubeSize = new Vector3(1.0f, 1.0f, 1.0f);  // Tamaño del cubo
+        private readonly Vector3 objSize = new Vector3(1.0f, 1.0f, 1.0f);  // Tamaño del cubo
 
 
         public Matrix4 ModelMatrix { get; private set; }
@@ -36,8 +36,9 @@ namespace ComputerGraphics3
         {
             float[] vertices = new float[]{};
             uint[] indices = new uint[]{};
-            if (polygonType != 2)
+            if (polygonType == 1)
             {
+                //Cube
                 vertices = new float[]
                 {
                     // Positions          // Texture coordinates
@@ -64,7 +65,7 @@ namespace ComputerGraphics3
             else
             {
                 if (polygonType == 2) {
-                    // Vértices de la pirámide: base cuadrada y ápice
+                    // Piramid
                     vertices = new float[]
                     {
                     // Positions         // Texture coordinates
@@ -207,21 +208,21 @@ namespace ComputerGraphics3
             var position = ModelMatrix.ExtractTranslation();
 
             // Colisión en el eje X
-            if (position.X - cubeSize.X / 2 < roomMin.X || position.X + cubeSize.X / 2 > roomMax.X)
+            if (position.X - objSize.X / 2 < roomMin.X || position.X + objSize.X / 2 > roomMax.X)
             {
-                position.X = Math.Clamp(position.X, roomMin.X + cubeSize.X / 2, roomMax.X - cubeSize.X / 2);
+                position.X = Math.Clamp(position.X, roomMin.X + objSize.X / 2, roomMax.X - objSize.X / 2);
             }
 
             // Colisión en el eje Y
-            if (position.Y - cubeSize.Y / 2 < roomMin.Y || position.Y + cubeSize.Y / 2 > roomMax.Y)
+            if (position.Y - objSize.Y / 2 < roomMin.Y || position.Y + objSize.Y / 2 > roomMax.Y)
             {
-                position.Y = Math.Clamp(position.Y, roomMin.Y + cubeSize.Y / 2, roomMax.Y - cubeSize.Y / 2);
+                position.Y = Math.Clamp(position.Y, roomMin.Y + objSize.Y / 2, roomMax.Y - objSize.Y / 2);
             }
 
             // Colisión en el eje Z
-            if (position.Z - cubeSize.Z / 2 < roomMin.Z || position.Z + cubeSize.Z / 2 > roomMax.Z)
+            if (position.Z - objSize.Z / 2 < roomMin.Z || position.Z + objSize.Z / 2 > roomMax.Z)
             {
-                position.Z = Math.Clamp(position.Z, roomMin.Z + cubeSize.Z / 2, roomMax.Z - cubeSize.Z / 2);
+                position.Z = Math.Clamp(position.Z, roomMin.Z + objSize.Z / 2, roomMax.Z - objSize.Z / 2);
             }
 
             // Actualizar la posición del cubo en el modelo
