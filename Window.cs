@@ -24,11 +24,7 @@ namespace ComputerGraphics3
         private Room room;
 
         private obj1 obj1;
-        //private BoundingBox _playerBoundingBox;
-        //private Vector3 _playerPosition;
-
-
-        //private double _time;
+        
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -60,8 +56,6 @@ namespace ComputerGraphics3
             room = new Room(shader, texture);
             room.Scale(new Vector3(10.0f, 10.0f, 10.0f));
 
-            //_playerPosition = new Vector3(0, 0, 0);
-            //_playerBoundingBox = new BoundingBox(new Vector3(0, 0, 0), new Vector3(0.5f, 0.5f, 0.5f));
             shader2 = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader_solid.frag");
             shader2.Use();
             shader2.SetInt("objectColor",0);
@@ -101,15 +95,7 @@ namespace ComputerGraphics3
             if (input.IsKeyDown(Keys.W))
             {
                 cam.Position += cam.Front * cameraSpeed * (float)e.Time; // Forward
-                //_playerBoundingBox.Update(_playerBoundingBox.Min + new Vector3(0, 0, -0.1f), _playerBoundingBox.Max);
             }
-
-            // Verifica colisión con la habitación
-            /*if (room.boundingbox.Intersects(_playerBoundingBox))
-            {
-                Console.WriteLine("Player collided with the room!");
-            }*/
-
             if (input.IsKeyDown(Keys.S))
             {
                 cam.Position -= cam.Front * cameraSpeed * (float)e.Time; // Backwards
@@ -180,16 +166,7 @@ namespace ComputerGraphics3
                 cam.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
 
-            /*_playerPosition += cam.Position;
-            _playerBoundingBox.Update(_playerPosition, new Vector3(0.5f, 0.5f, 0.5f));
-            if (room.boundingbox.Intersects(_playerBoundingBox))
-            {
-                Console.WriteLine("Player collided with the room!");
-            }
-            else
-            {
-                _playerBoundingBox.Update(_playerPosition, new Vector3(0.5f, 0.5f, 0.5f));
-            }*/
+            
             if (mouseinput.IsButtonDown(MouseButton.Left))
             {
                 if (input.IsKeyDown(Keys.W))
@@ -212,7 +189,6 @@ namespace ComputerGraphics3
         {
             base.OnRenderFrame(e);
 
-            //_time += 4.0 * e.Time;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 

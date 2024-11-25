@@ -25,6 +25,11 @@ namespace ComputerGraphics3
         private bool gravity;
         private const int GRAVITY_OFFSET = 3000;
 
+        private readonly Vector3 roomMin = new Vector3(-5.0f, -5.0f, -5.0f); // Límite inferior
+        private readonly Vector3 roomMax = new Vector3(5.0f, 5.0f, 5.0f);   // Límite superior
+        private readonly Vector3 cubeSize = new Vector3(1.0f, 1.0f, 1.0f);  // Tamaño del cubo
+
+
         public Matrix4 ModelMatrix { get; private set; }
 
         public obj1(Shader shader)
@@ -159,8 +164,32 @@ namespace ComputerGraphics3
         {
             if (gravity)
             {
-                Translate((Vector3.Zero +new Vector3(0,-GRAVITY_OFFSET,0) * deltaTime)*deltaTime);
+                Translate((Vector3.Zero + new Vector3(0, -GRAVITY_OFFSET, 0) * deltaTime) * deltaTime);
             }
+
+            var position = ModelMatrix.ExtractTranslation();
+
+            // Colisión en el eje X
+            if (position.X - cubeSize.X / 2 < roomMin.X || position.X + cubeSize.X / 2 > roomMax.X)
+            {
+                position.X = Math.Clamp(position.X, roomMin.X + cubeSize.X / 2, roomMax.X - cubeSize.X / 2);
+            }
+
+            // Colisión en el eje Y
+            if (position.Y - cubeSize.Y / 2 < roomMin.Y || position.Y + cubeSize.Y / 2 > roomMax.Y)
+            {
+                position.Y = Math.Clamp(position.Y, roomMin.Y + cubeSize.Y / 2, roomMax.Y - cubeSize.Y / 2);
+            }
+
+            // Colisión en el eje Z
+            if (position.Z - cubeSize.Z / 2 < roomMin.Z || position.Z + cubeSize.Z / 2 > roomMax.Z)
+            {
+                position.Z = Math.Clamp(position.Z, roomMin.Z + cubeSize.Z / 2, roomMax.Z - cubeSize.Z / 2);
+            }
+
+            // Actualizar la posición del cubo en el modelo
+            ModelMatrix = Matrix4.CreateTranslation(position);
+
         }
 
     }
