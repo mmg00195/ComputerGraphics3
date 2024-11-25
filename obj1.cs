@@ -32,28 +32,65 @@ namespace ComputerGraphics3
 
         public Matrix4 ModelMatrix { get; private set; }
 
-        public obj1(Shader shader)
+        public obj1(Shader shader, int polygonType)
         {
-            float[] vertices = {
-                // Positions          // Texture coordinates
-                -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Back face
-                0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-                0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // Front face
-                0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-                0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-                -0.5f,  0.5f,  0.5f,  0.0f, 1.0f
-            };
+            float[] vertices = new float[]{};
+            uint[] indices = new uint[]{};
+            if (polygonType != 2)
+            {
+                vertices = new float[]
+                {
+                    // Positions          // Texture coordinates
+                    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // Back face
+                    0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+                    0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+                    -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+                    -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, // Front face
+                    0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+                    0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+                    -0.5f, 0.5f, 0.5f, 0.0f, 1.0f
+                };
 
-            uint[] indices = {
-                0, 1, 2, 2, 3, 0, // Back face
-                4, 5, 6, 6, 7, 4, // Front face
-                0, 1, 5, 5, 4, 0, // Bottom face
-                2, 3, 7, 7, 6, 2, // Top face
-                0, 3, 7, 7, 4, 0, // Left face
-                1, 2, 6, 6, 5, 1  // Right face
-            };
+                indices = new uint[]
+                {
+                    0, 1, 2, 2, 3, 0, // Back face
+                    4, 5, 6, 6, 7, 4, // Front face
+                    0, 1, 5, 5, 4, 0, // Bottom face
+                    2, 3, 7, 7, 6, 2, // Top face
+                    0, 3, 7, 7, 4, 0, // Left face
+                    1, 2, 6, 6, 5, 1 // Right face
+                };
+            }
+            else
+            {
+                if (polygonType == 2) {
+                    // Vértices de la pirámide: base cuadrada y ápice
+                    vertices = new float[]
+                    {
+                    // Positions         // Texture coordinates
+                    -0.5f, 0.0f, -0.5f, 0.0f, 0.0f, // Base - V0
+                    0.5f, 0.0f, -0.5f, 1.0f, 0.0f, // Base - V1
+                    0.5f, 0.0f, 0.5f, 1.0f, 1.0f, // Base - V2
+                    -0.5f, 0.0f, 0.5f, 0.0f, 1.0f, // Base - V3
+                    0.0f, 1.0f, 0.0f, 0.5f, 0.5f // Ápice - V4
+                    };
+
+                    // Índices para formar los triángulos
+                    indices = new uint[]
+                    {
+                    // Base cuadrada (dos triángulos)
+                    0, 1, 2,
+                    2, 3, 0,
+
+                    // Caras laterales (cada triángulo conecta el ápice con dos vértices de la base)
+                    0, 1, 4,
+                    1, 2, 4,
+                    2, 3, 4,
+                    3, 0, 4
+                    };
+                }
+            } 
+
             _vertices = vertices;
             _indices = indices;
             _shader = shader;

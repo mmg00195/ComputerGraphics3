@@ -65,7 +65,7 @@ namespace ComputerGraphics3
             shader2.Use();
             shader2.SetInt("objectColor",0);
 
-            cubes.Add(new obj1(shader2));
+            cubes.Add(new obj1(shader2, rando.RandomInt(1, 3)));
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -159,7 +159,7 @@ namespace ComputerGraphics3
             }
             if (mouseinput.IsButtonPressed(MouseButton.Right))
             {
-                cubes.Add(new obj1(shader2));
+                cubes.Add(new obj1(shader2,rando.RandomInt(1,3)));
                 Cubenum = cubes.Count - 1;
                 cubes[Cubenum].Translate(new Vector3(rando.RandomInt(-5,5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
