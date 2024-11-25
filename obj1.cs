@@ -189,6 +189,7 @@ namespace ComputerGraphics3
 
             // Actualizar la posición del cubo en el modelo
             ModelMatrix = Matrix4.CreateTranslation(position);
+           
 
         }
 

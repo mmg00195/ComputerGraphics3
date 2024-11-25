@@ -3,6 +3,7 @@ using System.Drawing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
 
@@ -24,13 +25,17 @@ namespace ComputerGraphics3
         private Room room;
 
         private obj1 obj1;
-        
+        private obj1 obj2;
+        private List<obj1> cubes;
+        int Cubenum;
+
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
         {
             rando = new Randomizer();
-
+            cubes = new List<obj1>();
+            Cubenum = 0;
             DisplayHelp();
         }
 
@@ -59,8 +64,8 @@ namespace ComputerGraphics3
             shader2 = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader_solid.frag");
             shader2.Use();
             shader2.SetInt("objectColor",0);
-            obj1 = new obj1(shader2);
 
+            cubes.Add(new obj1(shader2));
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -91,7 +96,6 @@ namespace ComputerGraphics3
 
             const float cameraSpeed = 1.5f;
             const float sensitivity = 0.2f;
-
             if (input.IsKeyDown(Keys.W))
             {
                 cam.Position += cam.Front * cameraSpeed * (float)e.Time; // Forward
@@ -126,41 +130,51 @@ namespace ComputerGraphics3
             }
             if (input.IsKeyPressed(Keys.C))
             {
-                obj1.ToggleColor();
+                cubes[Cubenum].ToggleColor();
             }
             if (input.IsKeyPressed(Keys.V))
             {
-                obj1.ToggleVisibility();
+                cubes[Cubenum].ToggleVisibility();
             }
             if (input.IsKeyPressed(Keys.X))
             {
-                obj1.ToggleWireframeMode();
+                cubes[Cubenum].ToggleWireframeMode();
             }
             if (input.IsKeyPressed(Keys.G))
             {
-                obj1.ToggleGravity();
+                cubes[Cubenum].ToggleGravity();
             }
-
+            if (mouseinput.IsButtonPressed(MouseButton.Right))
+            {
+                cubes.Add(new obj1(shader2));
+                Cubenum = cubes.Count - 1;
+                cubes[Cubenum].Translate(new Vector3(rando.RandomInt(-5,5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
+            }
+            if (input.IsKeyPressed(Keys.LeftAlt))
+            {
+                if (Cubenum == cubes.Count - 1)
+                    Cubenum = 0;
+                else
+                    Cubenum += 1;
+            }
             float deltaTime = (float)e.Time;
-            obj1.Update(deltaTime);
+            cubes[Cubenum].Update(deltaTime);
             
             
             
             //mouse
             var mouse = MouseState;
+            // Calculate the offset of the mouse position
+            var deltaX = mouse.X - _lastPos.X;
+            var deltaY = mouse.Y - _lastPos.Y;
+            _lastPos = new Vector2(mouse.X, mouse.Y);
 
             if (_firstMove) // This bool variable is initially set to true.
             {
-                _lastPos = new Vector2(mouse.X, mouse.Y);
                 _firstMove = false;
             }
             else
             {
-                // Calculate the offset of the mouse position
-                var deltaX = mouse.X - _lastPos.X;
-                var deltaY = mouse.Y - _lastPos.Y;
-                _lastPos = new Vector2(mouse.X, mouse.Y);
-
                 // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
                 cam.Yaw += deltaX * sensitivity;
                 cam.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
@@ -170,19 +184,29 @@ namespace ComputerGraphics3
             if (mouseinput.IsButtonDown(MouseButton.Left))
             {
                 if (input.IsKeyDown(Keys.W))
-                    obj1.Translate(-Vector3.UnitZ * cameraSpeed * (float)e.Time);
+                    cubes[Cubenum].Translate(-Vector3.UnitZ * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.S))
-                    obj1.Translate(Vector3.UnitZ * cameraSpeed * (float)e.Time);
+                    cubes[Cubenum].Translate(Vector3.UnitZ * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.A))
-                    obj1.Translate(-Vector3.UnitX * cameraSpeed * (float)e.Time);
+                    cubes[Cubenum].Translate(-Vector3.UnitX * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.D))
-                    obj1.Translate(Vector3.UnitX * cameraSpeed * (float)e.Time);
+                    cubes[Cubenum].Translate(Vector3.UnitX * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.Space))
-                    obj1.Translate(Vector3.UnitY * cameraSpeed * (float)e.Time);
+                    cubes[Cubenum].Translate(Vector3.UnitY * cameraSpeed * (float)e.Time);
                 if (input.IsKeyDown(Keys.LeftShift))
-                    obj1.Translate(-Vector3.UnitY * cameraSpeed * (float)e.Time);
+                    cubes[Cubenum].Translate(-Vector3.UnitY * cameraSpeed * (float)e.Time);
+
+                //cubes[Cubenum].Rotate(deltaY, Vector3.UnitX);
+                //cubes[Cubenum].Rotate(deltaX, Vector3.UnitY);
 
             }
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+
+            cam.Fov -= e.OffsetY;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -203,7 +227,10 @@ namespace ComputerGraphics3
             */
             //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
             room.Render(cam);
-            obj1.Render(cam);
+            foreach (obj1 cube in cubes)
+            {
+                cube.Render(cam);
+            }
 
 
             SwapBuffers();
