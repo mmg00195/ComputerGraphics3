@@ -96,30 +96,40 @@ namespace ComputerGraphics3
 
             const float cameraSpeed = 1.5f;
             const float sensitivity = 0.2f;
-            if (input.IsKeyDown(Keys.W))
+            if (!mouseinput.IsButtonDown(MouseButton.Left))
             {
-                cam.Position += cam.Front * cameraSpeed * (float)e.Time; // Forward
+
+                if (input.IsKeyDown(Keys.W))
+                {
+                    cam.Position += cam.Front * cameraSpeed * (float)e.Time; // Forward
+                }
+
+                if (input.IsKeyDown(Keys.S))
+                {
+                    cam.Position -= cam.Front * cameraSpeed * (float)e.Time; // Backwards
+                }
+
+                if (input.IsKeyDown(Keys.A))
+                {
+                    cam.Position -= cam.Right * cameraSpeed * (float)e.Time; // Left
+                }
+
+                if (input.IsKeyDown(Keys.D))
+                {
+                    cam.Position += cam.Right * cameraSpeed * (float)e.Time; // Right
+                }
+
+                if (input.IsKeyDown(Keys.Space))
+                {
+                    cam.Position += cam.Up * cameraSpeed * (float)e.Time; // Up
+                }
+
+                if (input.IsKeyDown(Keys.LeftShift))
+                {
+                    cam.Position -= cam.Up * cameraSpeed * (float)e.Time; // Down
+                }
             }
-            if (input.IsKeyDown(Keys.S))
-            {
-                cam.Position -= cam.Front * cameraSpeed * (float)e.Time; // Backwards
-            }
-            if (input.IsKeyDown(Keys.A))
-            {
-                cam.Position -= cam.Right * cameraSpeed * (float)e.Time; // Left
-            }
-            if (input.IsKeyDown(Keys.D))
-            {
-                cam.Position += cam.Right * cameraSpeed * (float)e.Time; // Right
-            }
-            if (input.IsKeyDown(Keys.Space))
-            {
-                cam.Position += cam.Up * cameraSpeed * (float)e.Time; // Up
-            }
-            if (input.IsKeyDown(Keys.LeftShift))
-            {
-                cam.Position -= cam.Up * cameraSpeed * (float)e.Time; // Down
-            }
+
             if (input.IsKeyDown(Keys.H))
             {
                 DisplayHelp();
@@ -246,7 +256,12 @@ namespace ComputerGraphics3
             Console.WriteLine(" (V) - toggle object visibility");
             Console.WriteLine(" (X) - toggle object Wireframe Mode");
             Console.WriteLine(" (G) - toggle object Gravity");
+            Console.WriteLine(" (LefttClick) - selected cube movement");
+            Console.WriteLine(" (RightClick) - add new cube");
+            Console.WriteLine(" (LeftAlt) - select new cube");
             Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
+            //Console.WriteLine(" (R) - block directional camera movement");
+
         }
     }
 }
