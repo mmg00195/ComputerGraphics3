@@ -290,6 +290,7 @@ namespace ComputerGraphics3
             Console.WriteLine(" (V) - toggle object visibility");
             Console.WriteLine(" (X) - toggle object Wireframe/Surface Mode");
             Console.WriteLine(" (G) - toggle object Gravity");
+            Console.WriteLine(" (Backspace) - remove all objects");
             Console.WriteLine(" (Hold M) - Disco Mode");
             Console.WriteLine("\n");
             Console.WriteLine("__________Surprises_________");
