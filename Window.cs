@@ -65,7 +65,7 @@ namespace ComputerGraphics3
             shader2.Use();
             shader2.SetInt("objectColor",0);
 
-            polygon.Add(new obj1(shader2, rando.RandomInt(1, 3)));
+            polygon.Add(new obj1(shader2, rando.RandomInt(1, 4)));
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -188,6 +188,13 @@ namespace ComputerGraphics3
                 foreach (obj1 pol in polygon)
                     pol.DiscoMode();
             }
+
+            if (input.IsKeyDown(Keys.Backspace))
+            {
+                polygon.Clear();
+                polygon.Add(new obj1(shader2, rando.RandomInt(1,4)));
+                polnum = polygon.Count - 1;
+            }
             float deltaTime = (float)e.Time;
             polygon[polnum].Update(deltaTime);
             
@@ -263,7 +270,6 @@ namespace ComputerGraphics3
                 pol.Render(cam);
             }
 
-
             SwapBuffers();
         }
 
@@ -284,10 +290,13 @@ namespace ComputerGraphics3
             Console.WriteLine(" (V) - toggle object visibility");
             Console.WriteLine(" (X) - toggle object Wireframe/Surface Mode");
             Console.WriteLine(" (G) - toggle object Gravity");
-            Console.WriteLine(" (LeftAlt) - select new form");
+            Console.WriteLine(" (Hold M) - Disco Mode");
             Console.WriteLine("\n");
             Console.WriteLine("__________Surprises_________");
-            Console.WriteLine(" (Hold M(spawn plenty of objects)) - Manu Surprise");
+            Console.WriteLine("() - Manu Surprise");
+            Console.WriteLine("() - Vasco Surprise");
+            Console.WriteLine("() - Celia Surprise");
+
 
         }
     }

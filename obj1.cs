@@ -27,9 +27,9 @@ namespace ComputerGraphics3
         private int sectorCount = 36;
         private int stackCount = 18;
 
-        private readonly Vector3 roomMin = new Vector3(-5.0f, -5.0f, -5.0f); // Límite inferior
-        private readonly Vector3 roomMax = new Vector3(5.0f, 5.0f, 5.0f);   // Límite superior
-        private readonly Vector3 objSize = new Vector3(1.0f, 1.0f, 1.0f);  // Tamaño del cubo
+        private readonly Vector3 roomMin = new Vector3(-5.0f, -5.0f, -5.0f); // inferior limit
+        private readonly Vector3 roomMax = new Vector3(5.0f, 5.0f, 5.0f);   // superior limit
+        private readonly Vector3 objSize = new Vector3(1.0f, 1.0f, 1.0f);  // obj size
 
 
         public Matrix4 ModelMatrix { get; private set; }
@@ -111,7 +111,7 @@ namespace ComputerGraphics3
 
         private (float[] vertices, uint[] indices)  GenerateSphere(int sectorCount, int stackCount)
         {
-            float radius = 1.0f;
+            float radius = 0.5f;
             List<float> verticesSp = new List<float>();
             List<uint> indicesSp = new List<uint>();
 
