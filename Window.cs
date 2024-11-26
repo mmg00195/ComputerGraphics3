@@ -16,6 +16,7 @@ namespace ComputerGraphics3
         private Shader shader;
         private Shader shader2;
         private Texture texture;
+        private Texture table_texture;
 
         private Camera cam;
         private bool _firstMove = true;
@@ -29,6 +30,9 @@ namespace ComputerGraphics3
         private List<obj1> polygon;
         int polnum;
 
+        private List<furniture> roomObjects;
+
+
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -36,6 +40,7 @@ namespace ComputerGraphics3
             rando = new Randomizer();
             polygon = new List<obj1>();
             polnum = 0;
+            roomObjects = new List<furniture>();
             DisplayHelp();
         }
 
@@ -66,6 +71,12 @@ namespace ComputerGraphics3
             shader2.SetInt("objectColor",0);
 
             polygon.Add(new obj1(shader2, rando.RandomInt(1, 4)));
+
+            table_texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/wooden-texture.jpg");
+            table_texture.Use(TextureUnit.Texture0);
+            shader.SetInt("texture0", 0);
+            table table = new table(shader, table_texture, new Vector3(5.0f, 3.0f, 2.0f), new Vector3(0.0f,-3.5f,-3.9f));
+            roomObjects.Add(table);
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -270,6 +281,10 @@ namespace ComputerGraphics3
                 pol.Render(cam);
             }
 
+            foreach (furniture furn in roomObjects)
+            {
+                furn.Render(cam);
+            }
             SwapBuffers();
         }
 
