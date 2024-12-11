@@ -18,10 +18,10 @@ namespace ComputerGraphics3
         protected Texture _texture;
         protected Matrix4 _modelMatrix;
 
-        protected readonly Vector3 _size; // Tamaño del objeto para colisiones
+        protected Vector3 _size; // Tamaño del objeto para colisiones
         protected Vector3 _position; // Posición del objeto
- 
-        
+
+        protected Hitbox hitbox;
 
         public furniture(Shader shader, Texture texture, Vector3 size, Vector3 position)
         {
@@ -29,6 +29,8 @@ namespace ComputerGraphics3
             _texture = texture;
             _size = size;
             _position = position;
+
+            hitbox = new Hitbox(position, size);
 
             _modelMatrix = Matrix4.CreateTranslation(position);
 
@@ -78,6 +80,40 @@ namespace ComputerGraphics3
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
         }
 
-       
+        public virtual Hitbox getHitbox()
+        {
+            return hitbox;
+        }
+
+       /* public virtual void UpdateHitbox()
+        {
+            Vector3 currentPos = _modelMatrix.ExtractTranslation();
+            Vector3 currentScale = _modelMatrix.ExtractScale();
+            Vector3 scaledSize = Vector3.Multiply(_size, currentScale);
+
+            hitbox.UpdatePosition(scaledSize, currentPos);
+        }*/
+
+        public virtual void RenderHitbox(Camera camera, Shader hitboxShader)
+        {
+            hitboxShader.Use();
+            Matrix4 hitboxMatrix = Matrix4.CreateScale(hitbox.Size) * Matrix4.CreateTranslation(hitbox.Position);
+            hitboxShader.SetMatrix4("model", hitboxMatrix);
+            hitboxShader.SetMatrix4("view", camera.GetViewMatrix());
+            hitboxShader.SetMatrix4("projection", camera.GetProjectionMatrix());
+
+            // Renderiza un cubo o líneas que representen la hitbox
+            GL.DrawArrays(PrimitiveType.LineLoop, 0, 24); // Usa un VAO simple para el cubo
+        }
+
+        public virtual bool CheckCollision(Hitbox other)
+        {
+            if (hitbox.CheckCollision(other))
+            {
+                return true; // Hay una colisión
+            }
+
+            return false; // No hay colisión
+        }
     }
 }

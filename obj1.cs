@@ -31,6 +31,7 @@ namespace ComputerGraphics3
         private readonly Vector3 roomMax = new Vector3(5.0f, 5.0f, 5.0f);   // superior limit
         private readonly Vector3 objSize = new Vector3(1.0f, 1.0f, 1.0f);  // obj size
 
+        protected Hitbox hitbox;
 
         public Matrix4 ModelMatrix { get; private set; }
 
@@ -105,6 +106,7 @@ namespace ComputerGraphics3
             gravity = false;
 
             ModelMatrix = Matrix4.Identity;
+            hitbox = new Hitbox(Vector3.Zero, objSize);
 
             SetupBuffers();
         }
@@ -236,7 +238,7 @@ namespace ComputerGraphics3
         public void Translate(Vector3 translation)
         {
             ModelMatrix *= Matrix4.CreateTranslation(translation);
-            
+            UpdateHitbox();
         }
 
         public void Rotate(float angle, Vector3 axis)//?????????
@@ -297,6 +299,7 @@ namespace ComputerGraphics3
 
             // Actualizar la posición del cubo en el modelo
             ModelMatrix = Matrix4.CreateTranslation(position);
+            UpdateHitbox();
             
         }
         public void DiscoMode()
@@ -304,5 +307,31 @@ namespace ComputerGraphics3
             color = rando.RandomColor();
         }
 
+        public Hitbox getHitbox()
+        {
+            return hitbox;
+        }
+
+        public void UpdateHitbox()
+        {
+            Vector3 currentPos = ModelMatrix.ExtractTranslation();
+            Vector3 currentScale = ModelMatrix.ExtractScale();
+            Vector3 scaledSize = Vector3.Multiply(objSize, currentScale);
+            
+            hitbox.UpdatePosition(scaledSize, currentPos);
+        }
+        public void RenderHitbox(Camera camera, Shader hitboxShader)
+        {
+            hitboxShader.Use();
+            Matrix4 hitboxMatrix =
+                Matrix4.CreateScale(hitbox.Size) * Matrix4.CreateTranslation(hitbox.Position);
+            hitboxShader.SetMatrix4("model", hitboxMatrix);
+            hitboxShader.SetMatrix4("view", camera.GetViewMatrix());
+            hitboxShader.SetMatrix4("projection", camera.GetProjectionMatrix());
+
+            // Renderiza como un cubo o líneas
+            GL.DrawArrays(PrimitiveType.LineLoop, 0, 24);
+
+        }
     }
 }

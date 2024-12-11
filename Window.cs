@@ -38,7 +38,7 @@ namespace ComputerGraphics3
         {
             rando = new Randomizer();
             polygon = new List<obj1>();
-            polnum = 0;
+            polnum = -1;
             roomObjects = new List<furniture>();
             DisplayHelp();
         }
@@ -69,13 +69,15 @@ namespace ComputerGraphics3
             shader2.Use();
             shader2.SetInt("objectColor",0);
 
-            polygon.Add(new obj1(shader2, rando.RandomInt(1, 4)));
+            //polygon.Add(new obj1(shader2, rando.RandomInt(1, 4)));
 
             table_texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/beige-wooden-texture.jpg");
             table_texture.Use(TextureUnit.Texture0);
             shader.SetInt("texture0", 0);
             table table = new table(shader, table_texture, new Vector3(1.5f, 1.0f, 1.2f), new Vector3(0.0f,-2.1f,-3.7f));
+            //table.UpdateHitbox();
             roomObjects.Add(table);
+            
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -108,7 +110,7 @@ namespace ComputerGraphics3
             }
 
             const float cameraSpeed = 1.5f;
-            const float sensitivity = 0.2f;
+            const float sensitivity = 0.1f;
             if (!mouseinput.IsButtonDown(MouseButton.Left))
             {
 
@@ -151,27 +153,11 @@ namespace ComputerGraphics3
             {
                 GL.ClearColor(rando.RandomColor());
             }
-            if (input.IsKeyPressed(Keys.C))
-            {
-                polygon[polnum].ToggleColor();
-            }
-            if (input.IsKeyPressed(Keys.V))
-            {
-                polygon[polnum].ToggleVisibility();
-            }
-            if (input.IsKeyPressed(Keys.X))
-            {
-                polygon[polnum].ToggleWireframeMode();
-            }
-            if (input.IsKeyPressed(Keys.G))
-            {
-                polygon[polnum].ToggleGravity();
-            }
             if (input.IsKeyPressed(Keys.D1))
             {
-                polygon.Add(new obj1(shader2,1));
+                polygon.Add(new obj1(shader2, 1));
                 polnum = polygon.Count - 1;
-                polygon[polnum].Translate(new Vector3(rando.RandomInt(-5,5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
+                polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.D2))
             {
@@ -185,31 +171,66 @@ namespace ComputerGraphics3
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
-            if (input.IsKeyPressed(Keys.LeftAlt))
+
+            if (polnum >= 0)
             {
-                if (polnum == polygon.Count - 1)
-                    polnum = 0;
+                if (input.IsKeyPressed(Keys.C))
+                {
+                    polygon[polnum].ToggleColor();
+                }
+
+                if (input.IsKeyPressed(Keys.V))
+                {
+                    polygon[polnum].ToggleVisibility();
+                }
+
+                if (input.IsKeyPressed(Keys.X))
+                {
+                    polygon[polnum].ToggleWireframeMode();
+                }
+
+                if (input.IsKeyPressed(Keys.G))
+                {
+                    polygon[polnum].ToggleGravity();
+                }
+
+                if (input.IsKeyPressed(Keys.LeftAlt))
+                {
+                    if (polnum == polygon.Count - 1)
+                        polnum = 0;
+                    else
+                        polnum += 1;
+                }
+
+                if (input.IsKeyDown(Keys.M))
+                {
+                    foreach (obj1 pol in polygon)
+                        pol.DiscoMode();
+                }
+
+                if (input.IsKeyDown(Keys.Backspace))
+                {
+                    polygon.Clear();
+                    //polygon.Add(new obj1(shader2, rando.RandomInt(1,4)));
+                    //polnum = polygon.Count - 1;
+                    polnum = -1;
+                }
                 else
-                    polnum += 1;
+                {
+                    float deltaTime = (float)e.Time;
+                    polygon[polnum].Update(deltaTime);
+
+                    foreach (furniture obj in roomObjects)
+                    {
+                        if (obj.getHitbox().CheckCollision(polygon[polnum].getHitbox()))
+                        {
+                            Console.WriteLine("Collision detectada");
+                        }
+                    }
+                }
             }
 
-            if (input.IsKeyDown(Keys.M))
-            {
-                foreach (obj1 pol in polygon)
-                    pol.DiscoMode();
-            }
 
-            if (input.IsKeyDown(Keys.Backspace))
-            {
-                polygon.Clear();
-                polygon.Add(new obj1(shader2, rando.RandomInt(1,4)));
-                polnum = polygon.Count - 1;
-            }
-            float deltaTime = (float)e.Time;
-            polygon[polnum].Update(deltaTime);
-            
-            
-            
             //mouse
             var mouse = MouseState;
             // Calculate the offset of the mouse position
@@ -229,7 +250,7 @@ namespace ComputerGraphics3
             }
 
             
-            if (mouseinput.IsButtonDown(MouseButton.Left))
+            if (mouseinput.IsButtonDown(MouseButton.Left) && polnum >= 0)
             {
                 if (input.IsKeyDown(Keys.W))
                     polygon[polnum].Translate(-Vector3.UnitZ * cameraSpeed * (float)e.Time);
@@ -248,6 +269,8 @@ namespace ComputerGraphics3
                 //polygon[polnum].Rotate(deltaX, Vector3.UnitY);
 
             }
+            
+            
         }
 
         
@@ -270,21 +293,17 @@ namespace ComputerGraphics3
             shader.Use();
             shader2.Use();
 
-            /*var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
-            shader.SetMatrix4("model", model);
-            shader.SetMatrix4("view", cam.GetViewMatrix());
-            shader.SetMatrix4("projection", cam.GetProjectionMatrix());
-            */
-            //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
             room.Render(cam);
             foreach (obj1 pol in polygon)
             {
                 pol.Render(cam);
+                //pol.RenderHitbox(cam,shader2);
             }
 
             foreach (furniture furn in roomObjects)
             {
                 furn.Render(cam);
+                furn.RenderHitbox(cam, shader2);
             }
             SwapBuffers();
         }
