@@ -169,19 +169,19 @@ namespace ComputerGraphics3
             }
             if (input.IsKeyPressed(Keys.D1))
             {
-                polygon.Add(new obj1(shader2, 1));
+                polygon.Add(new obj1(lightingShader, 1));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.D2))
             {
-                polygon.Add(new obj1(shader2, 2));
+                polygon.Add(new obj1(lightingShader, 2));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.D3))
             {
-                polygon.Add(new obj1(shader2, 3));
+                polygon.Add(new obj1(lightingShader, 3));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
@@ -238,7 +238,7 @@ namespace ComputerGraphics3
                     {
                         if (obj.getHitbox().CheckCollision(polygon[polnum].getHitbox()))
                         {
-                            Console.WriteLine("Collision detectada");
+                            //Console.WriteLine("Collision detectada");
                         }
                     }
                 }
@@ -312,7 +312,7 @@ namespace ComputerGraphics3
             axes.Render(cam);
             foreach (obj1 pol in polygon)
             {
-                pol.Render(cam);
+                pol.Render(cam, room);
                 //pol.RenderHitbox(cam,shader2);
             }
 
@@ -343,12 +343,11 @@ namespace ComputerGraphics3
             Console.WriteLine(" (X) - toggle object Wireframe/Surface Mode");
             Console.WriteLine(" (G) - toggle object Gravity");
             Console.WriteLine(" (Backspace) - remove all objects");
-            Console.WriteLine(" (Hold M) - Disco Mode");
             Console.WriteLine("\n");
             Console.WriteLine("__________Surprises_________");
-            Console.WriteLine("() - Manu Surprise");
-            Console.WriteLine("() - Vasco Surprise");
-            Console.WriteLine("() - Celia Surprise");
+            Console.WriteLine("(Hold M) -  Surprise");
+            Console.WriteLine("(H) -  Surprise");
+            Console.WriteLine("() -  Surprise");
 
 
         }

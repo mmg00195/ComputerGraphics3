@@ -18,7 +18,8 @@ namespace ComputerGraphics3
 
         private int _vao, _vbo, _ebo;
         private Shader _shader;
-        private Color color;
+        //private Color color;
+        private Vector3 lightColor;
         private Randomizer rando;
         private bool visibility;
         private bool wireframe;
@@ -44,15 +45,36 @@ namespace ComputerGraphics3
                 case 1:
                     vertices = new float[]
                     {
-                        // Positions          // Texture coordinates
-                        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // Back face
-                        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-                        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-                        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-                        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, // Front face
-                        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-                        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-                        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f
+                        // Positions          // Normals
+                        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, 1.0f, // Back face
+                         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, 1.0f,
+                         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, 1.0f,
+                        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, 1.0f,
+
+                        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  -1.0f, // Front face
+                         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  -1.0f,
+                         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  -1.0f,
+                        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  -1.0f,
+
+                        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, // Left face
+                        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+                        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+                        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+                         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, // Right face
+                         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+                         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+                         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+                        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, // Bottom face
+                         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+                         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+                        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+
+                        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, // Top face
+                         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+                         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+                        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f
                     };
 
                     indices = new uint[]
@@ -69,12 +91,12 @@ namespace ComputerGraphics3
                     // Piramid
                     vertices = new float[]
                     {
-                        // Positions         // Texture coordinates
-                        -0.5f, 0.0f, -0.5f, 0.0f, 0.0f, // Base - V0
-                        0.5f, 0.0f, -0.5f, 1.0f, 0.0f, // Base - V1
-                        0.5f, 0.0f, 0.5f, 1.0f, 1.0f, // Base - V2
-                        -0.5f, 0.0f, 0.5f, 0.0f, 1.0f, // Base - V3
-                        0.0f, 1.0f, 0.0f, 0.5f, 0.5f // Ápice - V4
+                        // Positions         // Normals         // Texture coordinates
+                        -0.5f, 0.0f, -0.5f,  0.0f, -1.0f,  0.0f, // Base - V0
+                        0.5f, 0.0f, -0.5f,  0.0f, -1.0f,  0.0f, // Base - V1
+                        0.5f, 0.0f,  0.5f,  0.0f, -1.0f,  0.0f, // Base - V2
+                        -0.5f, 0.0f,  0.5f,  0.0f, -1.0f,  0.0f, // Base - V3
+                        0.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f  // Ápice - V4
                     };
 
                     // Índices para formar los triángulos
@@ -100,7 +122,8 @@ namespace ComputerGraphics3
             _indices = indices;
             _shader = shader;
             rando = new Randomizer();
-            color = rando.RandomColor();
+            //color = rando.RandomColor();
+            lightColor = SetLightColor();
             visibility = true;
             wireframe = false;
             gravity = false;
@@ -117,8 +140,7 @@ namespace ComputerGraphics3
             List<float> verticesSp = new List<float>();
             List<uint> indicesSp = new List<uint>();
 
-            float x, y, z, xy;
-            float s, t;
+            float x, y, z, nx, ny, nz, xy;
             float sectorStep = 2 * MathF.PI / sectorCount;
             float stackStep = MathF.PI / stackCount;
             float sectorAngle, stackAngle;
@@ -137,15 +159,18 @@ namespace ComputerGraphics3
                     // Coordenadas de vértices
                     x = xy * MathF.Cos(sectorAngle);
                     y = xy * MathF.Sin(sectorAngle);
+                    nx = x / radius;
+                    ny = y / radius;
+                    nz = z / radius;
+
                     verticesSp.Add(x);
                     verticesSp.Add(y);
                     verticesSp.Add(z);
 
-                    // Coordenadas de textura
-                    s = (float)j / sectorCount;
-                    t = (float)i / stackCount;
-                    verticesSp.Add(s);
-                    verticesSp.Add(t);
+                    // Norm
+                    verticesSp.Add(nx);
+                    verticesSp.Add(ny);
+                    verticesSp.Add(nz);
                 }
             }
 
@@ -195,27 +220,43 @@ namespace ComputerGraphics3
                 BufferUsageHint.StaticDraw);
 
             var positionLocation = _shader.GetAttribLocation("aPosition");
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(positionLocation);
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float),
-                3 * sizeof(float));
-            GL.EnableVertexAttribArray(texCoordLocation);
+            var normalLocation = _shader.GetAttribLocation("aNormal");
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 
             GL.BindVertexArray(0);
         }
 
-        public void Render(Camera camera)
+        public void Render(Camera camera, Room room)
         {
             _shader.Use();
-            _shader.SetColor("objectColor",color);
+            //_shader.SetColor("objectColor",color);
 
             //_texture.Use(TextureUnit.Texture0);
 
             _shader.SetMatrix4("model", ModelMatrix);
             _shader.SetMatrix4("view", camera.GetViewMatrix());
             _shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+
+            _shader.SetVector3("viewPos", camera.Position);
+
+            _shader.SetInt("material.diffuse", 0);
+            _shader.SetInt("material.specular", 0);
+            _shader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+            _shader.SetFloat("material.shininess", 32.0f);
+            
+            // The ambient light is less intensive than the diffuse light in order to make it less dominant
+            Vector3 ambientColor = lightColor * new Vector3(0.2f);
+            Vector3 diffuseColor = lightColor * new Vector3(0.5f);
+
+            _shader.SetVector3("lights[0].position", room._pointLightPos[0]);
+            _shader.SetVector3("lights[0].ambient", ambientColor);
+            _shader.SetVector3("lights[0].diffuse", diffuseColor);
+            _shader.SetVector3("lights[0].specular", new Vector3(1.0f, 1.0f, 1.0f));
+
 
             GL.BindVertexArray(_vao);
 
@@ -251,9 +292,16 @@ namespace ComputerGraphics3
             ModelMatrix *= Matrix4.CreateScale(scale);
         }
 
+        public Vector3 SetLightColor()
+        {
+            Color color = rando.RandomColor();
+            lightColor = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
+            return lightColor;
+        }
         public void ToggleColor()
         {
-            this.color = rando.RandomColor();
+            Color color = rando.RandomColor();
+            lightColor = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
         }
 
         public void ToggleVisibility()
@@ -296,7 +344,12 @@ namespace ComputerGraphics3
             {
                 position.Z = Math.Clamp(position.Z, roomMin.Z + objSize.Z / 2, roomMax.Z - objSize.Z / 2);
             }
-
+            // Colision furniture
+            /*if (position.Z - objSize.Z / 2 < roomMax.Z - 5 && position.Y - objSize.Y / 2 < roomMin.Y - 5)
+            {
+                position.Z = Math.Clamp(position.Z,5 + roomMin.Z + objSize.Z / 2, roomMax.Z - objSize.Z / 2);
+                position.Y = Math.Clamp(position.Y,5 + roomMin.Y + objSize.Y / 2, roomMax.Y - objSize.Y / 2);
+            }*/
             // Actualizar la posición del cubo en el modelo
             ModelMatrix = Matrix4.CreateTranslation(position);
             UpdateHitbox();
@@ -304,7 +357,7 @@ namespace ComputerGraphics3
         }
         public void DiscoMode()
         {
-            color = rando.RandomColor();
+            ToggleColor();
         }
 
         public Hitbox getHitbox()

@@ -89,7 +89,7 @@ namespace ComputerGraphics3
             _shader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _shader.SetFloat("material.shininess", 32.0f);
 
-            room.ConfigureLighting(_shader, camera);
+            room.ConfigureLighting(_shader, camera, 1);
 
             GL.BindVertexArray(_vao);
 

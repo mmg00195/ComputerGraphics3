@@ -67,10 +67,11 @@ namespace ComputerGraphics3
         private int _vbo;
         private Texture _texture;
 
-        private readonly Vector3[] _pointLightPos =
+        public readonly Vector3[] _pointLightPos =
         {
-            new Vector3(10.2f, 10.0f, 20.0f),
-            new Vector3(0.0f, 4.0f, 0.0f)
+            new Vector3(0.0f, 4.0f, 0.0f),
+            new Vector3(10.2f, 10.0f, 20.0f)
+            
         };
         private int _vaoModel;
         private int _vaoLamp;
@@ -128,11 +129,11 @@ namespace ComputerGraphics3
             GL.BindVertexArray(0);
         }
 
-        public void ConfigureLighting(Shader shader, Camera camera)
+        public void ConfigureLighting(Shader shader, Camera camera, int tamLights)
         {
             shader.Use();
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < tamLights; i++)
             {
                 shader.SetVector3($"lights[{i}].position", _pointLightPos[i]);
                 shader.SetVector3($"lights[{i}].ambient", new Vector3(0.2f, 0.2f, 0.2f));
@@ -159,7 +160,7 @@ namespace ComputerGraphics3
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
 
-            ConfigureLighting(_lightingShader, camera);
+            ConfigureLighting(_lightingShader, camera, 2);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 8);
 
@@ -172,14 +173,14 @@ namespace ComputerGraphics3
 
             Matrix4 lampMatrix = Matrix4.Identity;
             lampMatrix *= Matrix4.CreateScale(5.0f);
-            lampMatrix *= Matrix4.CreateTranslation(_pointLightPos[0]);
+            lampMatrix *= Matrix4.CreateTranslation(_pointLightPos[1]);
             _lampShader.SetMatrix4("model", lampMatrix);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
 
             Matrix4 lampMatrix2 = Matrix4.Identity;
             lampMatrix2 *= Matrix4.CreateScale(0.7f);
-            lampMatrix2 *= Matrix4.CreateTranslation(_pointLightPos[1]);
+            lampMatrix2 *= Matrix4.CreateTranslation(_pointLightPos[0]);
             _lampShader.SetMatrix4("model", lampMatrix2);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
         }
