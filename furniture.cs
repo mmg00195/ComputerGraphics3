@@ -96,14 +96,8 @@ namespace ComputerGraphics3
 
         public virtual void RenderHitbox(Camera camera, Shader hitboxShader)
         {
-            hitboxShader.Use();
             Matrix4 hitboxMatrix = Matrix4.CreateScale(hitbox.Size) * Matrix4.CreateTranslation(hitbox.Position);
-            hitboxShader.SetMatrix4("model", hitboxMatrix);
-            hitboxShader.SetMatrix4("view", camera.GetViewMatrix());
-            hitboxShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-
-            // Renderiza un cubo o líneas que representen la hitbox
-            GL.DrawArrays(PrimitiveType.LineLoop, 0, 24); // Usa un VAO simple para el cubo
+            //hitbox.Render(hitboxMatrix, camera, hitboxShader);
         }
 
         public virtual bool CheckCollision(Hitbox other)

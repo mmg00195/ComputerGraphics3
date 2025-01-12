@@ -6,6 +6,8 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using System.ComponentModel;
+using System.Resources;
 
 
 namespace ComputerGraphics3
@@ -13,6 +15,7 @@ namespace ComputerGraphics3
     public class Window : GameWindow
     {
 
+        private Shader lightingShader;
         private Shader shader;
         private Shader shader2;
         private Texture texture;
@@ -31,6 +34,9 @@ namespace ComputerGraphics3
 
         private List<furniture> roomObjects;
 
+        private Axes axes;
+
+        
 
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -50,19 +56,21 @@ namespace ComputerGraphics3
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
 
-            shader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.frag");
-            shader.Use();
 
-            
+            lightingShader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/lighting.frag");
+            shader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.frag");
+
+            shader.Use();
+            lightingShader.Use();
+
             texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/container.png");
             texture.Use(TextureUnit.Texture0);
-            shader.SetInt("texture0", 0);
             
             cam = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
             CursorState = CursorState.Grabbed;
 
-            room = new Room(shader, texture);
+            room = new Room(shader,lightingShader, texture);
             room.Scale(new Vector3(10.0f, 10.0f, 10.0f));
 
             shader2 = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader_solid.frag");
@@ -73,11 +81,12 @@ namespace ComputerGraphics3
 
             table_texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/beige-wooden-texture.jpg");
             table_texture.Use(TextureUnit.Texture0);
-            shader.SetInt("texture0", 0);
-            table table = new table(shader, table_texture, new Vector3(1.5f, 1.0f, 1.2f), new Vector3(0.0f,-2.1f,-3.7f));
-            //table.UpdateHitbox();
+            lightingShader.SetInt("material.diffuse", 0);
+            table table = new table(lightingShader, table_texture, new Vector3(1.5f, 1.0f, 1.2f), new Vector3(0.0f,-2.1f,-3.7f));
             roomObjects.Add(table);
-            
+
+            axes = new Axes(shader2);
+
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -152,6 +161,11 @@ namespace ComputerGraphics3
             if (input.IsKeyPressed(Keys.B))
             {
                 GL.ClearColor(rando.RandomColor());
+            }
+
+            if (input.IsKeyPressed(Keys.Z))
+            {
+                axes.ToggleVisibility();
             }
             if (input.IsKeyPressed(Keys.D1))
             {
@@ -290,10 +304,12 @@ namespace ComputerGraphics3
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             texture.Use(TextureUnit.Texture0);
+            lightingShader.Use();
             shader.Use();
             shader2.Use();
 
             room.Render(cam);
+            axes.Render(cam);
             foreach (obj1 pol in polygon)
             {
                 pol.Render(cam);
@@ -315,6 +331,7 @@ namespace ComputerGraphics3
             Console.WriteLine(" (H) - help menu");
             Console.WriteLine(" (ESC) - stop application");
             Console.WriteLine(" (B) - toggle landscape colour");
+            Console.WriteLine(" (Z) - toggle axes visibility");
             Console.WriteLine(" (W,A,S,D, shift, space) - camera movement");
             Console.WriteLine("\n");
             Console.WriteLine("__________Object Tools_________");

@@ -19,56 +19,71 @@ namespace ComputerGraphics3
     {
 
         private readonly float[] _vertices = {
-            // Positions          // Texture coordinates
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Back face
-             0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            // Positions         //Normals    // Texture coordinates
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f, // Back face
+             0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  1.0f, 0.0f,
+             0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  1.0f, 1.0f,
+             0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
 
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // Front face
-             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,  1.0f,  0.0f, 0.0f, // Front face
+             0.5f, -0.5f,  0.5f, 0.0f, 0.0f,  1.0f,  1.0f, 0.0f,
+             0.5f,  0.5f,  0.5f, 0.0f, 0.0f,  1.0f,  1.0f, 1.0f,
+             0.5f,  0.5f,  0.5f, 0.0f, 0.0f,  1.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,  1.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,  1.0f,  0.0f, 0.0f,
 
-            -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // Left face
-            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,  1.0f, 0.0f, // Left face
+            -0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
 
-            0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // Right face
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  1.0f, 0.0f, // Right face
+            0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+            0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+            0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
 
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Bottom face
-            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,  0.0f, 0.0f, // Bottom face
+            0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+            0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,  1.0f, 1.0f,
+            0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,  1.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,  0.0f, 0.0f,
 
-            -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, // Top face
-            0.5f,  0.5f, -0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f
+            -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, // Top face
+            0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f
         };
 
-        private readonly uint[] _indices = {
-            0, 1, 2, 2, 3, 0, // Back face
-            4, 5, 6, 6, 7, 4, // Front face
-            8, 9, 10, 10, 11, 8,// Left face
-            12, 13, 14, 14, 15, 12,// Right face
-            16, 17, 18, 18, 19, 16,// Bottom face
-            20, 21, 22, 22, 23, 20// Top face
-        };
 
-        private int _vao, _vbo, _ebo;
-        private Shader _shader;
+        private int _vbo;
         private Texture _texture;
+
+        private readonly Vector3[] _pointLightPos =
+        {
+            new Vector3(10.2f, 10.0f, 20.0f),
+            new Vector3(0.0f, 4.0f, 0.0f)
+        };
+        private int _vaoModel;
+        private int _vaoLamp;
+        private Shader _lampShader;
+        private Shader _lightingShader;
+       
 
         public Matrix4 ModelMatrix { get; private set; }
         //public BoundingBox boundingbox { get; private set; }
-        public Room(Shader shader, Texture texture)
+        public Room(Shader lampShader, Shader lightingShader, Texture texture)
         {
-            _shader = shader;
+            _lampShader = lampShader;
+            _lightingShader = lightingShader;
             _texture = texture;
 
             ModelMatrix = Matrix4.Identity;
@@ -78,40 +93,90 @@ namespace ComputerGraphics3
 
         private void SetupBuffers()
         {
-            _vao = GL.GenVertexArray();
             _vbo = GL.GenBuffer();
-            _ebo = GL.GenBuffer();
-
-            GL.BindVertexArray(_vao);
-
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _ebo);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
+            _vaoModel = GL.GenVertexArray();
+            GL.BindVertexArray(_vaoModel);
 
-            var positionLocation = _shader.GetAttribLocation("aPosition");
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+            // Configura atributos de posición
+            var positionLocation = _lightingShader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(positionLocation);
+            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+            // Configura atributos de normales
+            var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+
+            // Configura atributos de textura
+            var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+
+            _vaoLamp = GL.GenVertexArray();
+            GL.BindVertexArray(_vaoLamp);
+
+            // The lamp shader should have its stride updated aswell, however we dont actually
+            // use the texture coords for the lamp, so we dont need to add any extra attributes.
+            positionLocation = _lampShader.GetAttribLocation("aPosition");
+            GL.EnableVertexAttribArray(positionLocation);
+            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            
 
             GL.BindVertexArray(0);
         }
 
         public void Render(Camera camera)
         {
-            _shader.Use();
+             GL.BindVertexArray(_vaoModel);
             _texture.Use(TextureUnit.Texture0);
+            _lightingShader.Use();
 
-            _shader.SetMatrix4("model", ModelMatrix);
-            _shader.SetMatrix4("view", camera.GetViewMatrix());
-            _shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+            _lightingShader.SetMatrix4("model", ModelMatrix);
+            _lightingShader.SetMatrix4("view", camera.GetViewMatrix());
+            _lightingShader.SetMatrix4("projection", camera.GetProjectionMatrix());
 
-            GL.BindVertexArray(_vao);
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            _lightingShader.SetVector3("viewPos", camera.Position);
+
+            // Here we specify to the shaders what textures they should refer to when we want to get the positions.
+            _lightingShader.SetInt("material.diffuse", 0);
+            _lightingShader.SetInt("material.specular", 0);
+            _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+            _lightingShader.SetFloat("material.shininess", 32.0f);
+
+
+            // Here we set all the lights
+            for (int i = 0; i < _pointLightPos.Length; i++)
+            {
+                _lightingShader.SetVector3($"lights[{i}].position", _pointLightPos[i]);
+                _lightingShader.SetVector3($"lights[{i}].ambient", new Vector3(0.2f));
+                _lightingShader.SetVector3($"lights[{i}].diffuse", new Vector3(0.5f));
+                _lightingShader.SetVector3($"lights[{i}].specular", new Vector3(1.0f));
+            }
+
+            GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 8);
+
+            GL.BindVertexArray(_vaoLamp);
+
+            _lampShader.Use();
+
+            _lampShader.SetMatrix4("view", camera.GetViewMatrix());
+            _lampShader.SetMatrix4("projection", camera.GetProjectionMatrix());
+
+            Matrix4 lampMatrix = Matrix4.Identity;
+            lampMatrix *= Matrix4.CreateScale(5.0f);
+            lampMatrix *= Matrix4.CreateTranslation(_pointLightPos[0]);
+            _lampShader.SetMatrix4("model", lampMatrix);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
+
+            Matrix4 lampMatrix2 = Matrix4.Identity;
+            lampMatrix2 *= Matrix4.CreateScale(0.7f);
+            lampMatrix2 *= Matrix4.CreateTranslation(_pointLightPos[1]);
+            _lampShader.SetMatrix4("model", lampMatrix2);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
         }
 
         public void Translate(Vector3 translation)
@@ -129,6 +194,7 @@ namespace ComputerGraphics3
         public void Scale(Vector3 scale)
         {
             ModelMatrix *= Matrix4.CreateScale(scale);
+            _lightingShader.SetMatrix4("model", ModelMatrix);
             //UpdateBoundingBox();
         }
         /*private void UpdateBoundingBox()

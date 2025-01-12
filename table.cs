@@ -160,19 +160,6 @@ namespace ComputerGraphics3
             SetupBuffers();
         }
 
-        public override void RenderHitbox(Camera camera, Shader hitboxShader)
-        {
-            hitboxShader.Use();
-            Matrix4 hitboxMatrix =
-                Matrix4.CreateScale(subHitboxes.Size) * Matrix4.CreateTranslation(subHitboxes.Position);
-            hitboxShader.SetMatrix4("model", hitboxMatrix);
-            hitboxShader.SetMatrix4("view", camera.GetViewMatrix());
-            hitboxShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-
-            // Renderiza como un cubo o líneas
-            GL.DrawArrays(PrimitiveType.LineLoop, 0, 24);
-
-        }
         public override bool CheckCollision(Hitbox other)
         {
             if (subHitboxes.CheckCollision(other))

@@ -34,7 +34,7 @@ namespace ComputerGraphics3
             {
                 ClientSize = new Vector2i(800, 600),
                 Location = new Vector2i(700, 200),
-                Title = "MyFunnyRoom",
+                Title = "Element Erasmus Graphics",
 
                 // This is needed to run on macos???
                 Flags = ContextFlags.ForwardCompatible,
