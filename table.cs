@@ -20,103 +20,107 @@ namespace ComputerGraphics3
         {
 
             // Escalamos por size.X, size.Y, size.Z
-            float[] vertices =
-            {
-                //Table
+            float[] vertices = {
+                // Tabletop
                 // Back face
-                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                2.0f * size.X, 0.5f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, 0.5f * size.Y, -1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+                 2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+                 2.0f * size.X,  0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+                -2.0f * size.X,  0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+
                 // Front face
-                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
-                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 1.0f, 0.0f,
-                2.0f * size.X, 0.5f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, 0.5f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y,  1.0f * size.Z,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+                 2.0f * size.X, -0.5f * size.Y,  1.0f * size.Z,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+                 2.0f * size.X,  0.5f * size.Y,  1.0f * size.Z,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+                -2.0f * size.X,  0.5f * size.Y,  1.0f * size.Z,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
+
                 // Left face
-                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                -2.0f * size.X, 0.5f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, 0.5f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
-                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
+                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+                -2.0f * size.X,  0.5f * size.Y, -1.0f * size.Z, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+                -2.0f * size.X,  0.5f * size.Y,  1.0f * size.Z, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y,  1.0f * size.Z, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+
                 // Right face
-                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                2.0f * size.X, 0.5f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                2.0f * size.X, 0.5f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
-                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
+                 2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+                 2.0f * size.X,  0.5f * size.Y, -1.0f * size.Z,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+                 2.0f * size.X,  0.5f * size.Y,  1.0f * size.Z,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+                 2.0f * size.X, -0.5f * size.Y,  1.0f * size.Z,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+
                 // Bottom face
-                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+                 2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+                 2.0f * size.X, -0.5f * size.Y,  1.0f * size.Z,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y,  1.0f * size.Z,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+
                 // Top face
-                -2.0f * size.X, 0.5f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                2.0f * size.X, 0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                2.0f * size.X, 0.5f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, 0.5f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X,  0.5f * size.Y, -1.0f * size.Z,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+                 2.0f * size.X,  0.5f * size.Y, -1.0f * size.Z,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+                 2.0f * size.X,  0.5f * size.Y,  1.0f * size.Z,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+                -2.0f * size.X,  0.5f * size.Y,  1.0f * size.Z,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
 
                 //Leg left
                 // Back face
-                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                -1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                -1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
+                -1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f,
+                -1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
+                -2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f,
                 // Front face
-                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
-                -1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z, 1.0f, 0.0f,
-                -1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f,
+                -1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f,
+                -1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f,
+                -2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f,
                 // Left face
-                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                -2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
-                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
+                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+                -2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
+                -2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
                 // Right face
-                -1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                -1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                -1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
-                -1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
+                -1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+                -1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
+                -1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+                -1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
                 // Bottom face
-                -2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                -1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                -1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f,
+                -1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f,
+                -1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f,
+                -2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
                 // Top face
-                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                -1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                -1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f,
+                -1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f,
+                -1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f,
+                -2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f,
 
                 //Right left
                 // Back face
-                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, 0.0f, 1.0f,
+                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
+                1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f,
+                1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
+                2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f,
                 // Front face
-                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
-                1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z, 1.0f, 0.0f,
-                1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f,
+                1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f,
+                1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f,
+                2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f,
                 // Left face
-                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
-                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
+                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+                2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
+                2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
                 // Right face
-                1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 1.0f,
-                1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
-                1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 0.0f,
+                1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+                1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
+                1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+                1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
                 // Bottom face
-                2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                2.0f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f,
+                1.7f * size.X, -2.9f * size.Y, -1.0f * size.Z,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f,
+                1.7f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f,
+                2.0f * size.X, -2.9f * size.Y, 1.0f * size.Z,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
                 // Top face
-                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z, 0.0f, 0.0f,
-                1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z, 1.0f, 0.0f,
-                1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z, 1.0f, 1.0f,
-                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z, 0.0f, 1.0f,
+                2.0f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f,
+                1.7f * size.X, -0.5f * size.Y, -1.0f * size.Z,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f,
+                1.7f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f,
+                2.0f * size.X, -0.5f * size.Y, 1.0f * size.Z,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f,
             };
 
 

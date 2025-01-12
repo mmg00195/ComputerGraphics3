@@ -128,6 +128,19 @@ namespace ComputerGraphics3
             GL.BindVertexArray(0);
         }
 
+        public void ConfigureLighting(Shader shader, Camera camera)
+        {
+            shader.Use();
+
+            for (int i = 0; i < 2; i++)
+            {
+                shader.SetVector3($"lights[{i}].position", _pointLightPos[i]);
+                shader.SetVector3($"lights[{i}].ambient", new Vector3(0.2f, 0.2f, 0.2f));
+                shader.SetVector3($"lights[{i}].diffuse", new Vector3(0.5f, 0.5f, 0.5f));
+                shader.SetVector3($"lights[{i}].specular", new Vector3(1.0f, 1.0f, 1.0f));
+            }
+        }
+
         public void Render(Camera camera)
         {
              GL.BindVertexArray(_vaoModel);
@@ -146,15 +159,7 @@ namespace ComputerGraphics3
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
 
-
-            // Here we set all the lights
-            for (int i = 0; i < _pointLightPos.Length; i++)
-            {
-                _lightingShader.SetVector3($"lights[{i}].position", _pointLightPos[i]);
-                _lightingShader.SetVector3($"lights[{i}].ambient", new Vector3(0.2f));
-                _lightingShader.SetVector3($"lights[{i}].diffuse", new Vector3(0.5f));
-                _lightingShader.SetVector3($"lights[{i}].specular", new Vector3(1.0f));
-            }
+            ConfigureLighting(_lightingShader, camera);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 8);
 

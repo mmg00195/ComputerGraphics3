@@ -318,7 +318,7 @@ namespace ComputerGraphics3
 
             foreach (furniture furn in roomObjects)
             {
-                furn.Render(cam);
+                furn.Render(cam, room);
                 furn.RenderHitbox(cam, shader2);
             }
             SwapBuffers();
