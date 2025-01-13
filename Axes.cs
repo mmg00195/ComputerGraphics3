@@ -24,13 +24,13 @@ namespace ComputerGraphics3
             {
                 //Position  //Color
                 0f, 0f, 0f, 1f, 0f ,0f,
-                1f, 0f, 0f, 1f, 0f ,0f,
+                5f, 0f, 0f, 1f, 0f ,0f,
 
                 0f, 0f, 0f, 0f, 1f ,0f,
-                0f, 1f, 0f, 0f, 1f ,0f,
+                0f, 5f, 0f, 0f, 1f ,0f,
 
                 0f, 0f, 0f, 0f, 0f ,1f,
-                0f, 0f, 1f, 0f, 0f ,1f
+                0f, 0f, 5f, 0f, 0f ,1f
             };
             _shader = shader;
             myvisibility = true;
@@ -59,7 +59,7 @@ namespace ComputerGraphics3
             GL.BindVertexArray(0);
         }
 
-        public void Render(Camera camera)
+        public void Render(Camera camera)                
         {
             _shader.Use();
             _shader.SetMatrix4("model", Matrix4.Identity);

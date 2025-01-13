@@ -15,7 +15,9 @@ namespace ComputerGraphics3
     public class Window : GameWindow
     {
 
-        private Shader lightingShader;
+        private Shader roomShader;
+        private Shader objShader;
+        private Shader tableShader;
         private Shader shader;
         private Shader shader2;
         private Texture texture;
@@ -56,12 +58,16 @@ namespace ComputerGraphics3
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
 
+            roomShader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/lighting.frag");
+            objShader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/lighting.frag");
+            tableShader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/lighting.frag");
 
-            lightingShader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/lighting.frag");
             shader = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.frag");
 
             shader.Use();
-            lightingShader.Use();
+            roomShader.Use();
+            tableShader.Use();
+            objShader.Use();
 
             texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/container.png");
             texture.Use(TextureUnit.Texture0);
@@ -70,22 +76,20 @@ namespace ComputerGraphics3
 
             CursorState = CursorState.Grabbed;
 
-            room = new Room(shader,lightingShader, texture);
+            room = new Room(shader,roomShader, texture);
             room.Scale(new Vector3(10.0f, 10.0f, 10.0f));
 
-            shader2 = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader_solid.frag");
+            shader2 = new Shader("C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.vert", "C:/Users/manue/source/repos/ComputerGraphics3/Shaders/shader.frag");
             shader2.Use();
-            shader2.SetInt("objectColor",0);
+            axes = new Axes(shader2);
 
             //polygon.Add(new obj1(shader2, rando.RandomInt(1, 4)));
 
             table_texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/beige-wooden-texture.jpg");
             table_texture.Use(TextureUnit.Texture0);
-            lightingShader.SetInt("material.diffuse", 0);
-            table table = new table(lightingShader, table_texture, new Vector3(1.5f, 1.0f, 1.2f), new Vector3(0.0f,-2.1f,-3.7f));
+            tableShader.SetInt("material.diffuse", 0);
+            table table = new table(tableShader, table_texture, new Vector3(2.3f, 1.0f, 1.2f), new Vector3(0.0f,-2.1f,-3.7f));
             roomObjects.Add(table);
-
-            axes = new Axes(shader2);
 
         }
 
@@ -169,19 +173,19 @@ namespace ComputerGraphics3
             }
             if (input.IsKeyPressed(Keys.D1))
             {
-                polygon.Add(new obj1(lightingShader, 1));
+                polygon.Add(new obj1(objShader, 1));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.D2))
             {
-                polygon.Add(new obj1(lightingShader, 2));
+                polygon.Add(new obj1(objShader, 2));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.D3))
             {
-                polygon.Add(new obj1(lightingShader, 3));
+                polygon.Add(new obj1(objShader, 3));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
@@ -225,22 +229,12 @@ namespace ComputerGraphics3
                 if (input.IsKeyDown(Keys.Backspace))
                 {
                     polygon.Clear();
-                    //polygon.Add(new obj1(shader2, rando.RandomInt(1,4)));
-                    //polnum = polygon.Count - 1;
                     polnum = -1;
                 }
                 else
                 {
                     float deltaTime = (float)e.Time;
                     polygon[polnum].Update(deltaTime);
-
-                    foreach (furniture obj in roomObjects)
-                    {
-                        if (obj.getHitbox().CheckCollision(polygon[polnum].getHitbox()))
-                        {
-                            //Console.WriteLine("Collision detectada");
-                        }
-                    }
                 }
             }
 
@@ -279,9 +273,6 @@ namespace ComputerGraphics3
                 if (input.IsKeyDown(Keys.LeftShift))
                     polygon[polnum].Translate(-Vector3.UnitY * cameraSpeed * (float)e.Time);
 
-                //polygon[polnum].Rotate(deltaY, Vector3.UnitX);
-                //polygon[polnum].Rotate(deltaX, Vector3.UnitY);
-
             }
             
             
@@ -304,7 +295,9 @@ namespace ComputerGraphics3
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             texture.Use(TextureUnit.Texture0);
-            lightingShader.Use();
+            objShader.Use();
+            tableShader.Use();
+            roomShader.Use();
             shader.Use();
             shader2.Use();
 
@@ -313,14 +306,13 @@ namespace ComputerGraphics3
             foreach (obj1 pol in polygon)
             {
                 pol.Render(cam, room);
-                //pol.RenderHitbox(cam,shader2);
             }
 
             foreach (furniture furn in roomObjects)
             {
                 furn.Render(cam, room);
-                furn.RenderHitbox(cam, shader2);
             }
+
             SwapBuffers();
         }
 
@@ -346,7 +338,7 @@ namespace ComputerGraphics3
             Console.WriteLine("\n");
             Console.WriteLine("__________Surprises_________");
             Console.WriteLine("(Hold M) -  Surprise");
-            Console.WriteLine("(H) -  Surprise");
+            Console.WriteLine("() -  Surprise");
             Console.WriteLine("() -  Surprise");
 
 

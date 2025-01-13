@@ -32,94 +32,100 @@ namespace ComputerGraphics3
         private readonly Vector3 roomMax = new Vector3(5.0f, 5.0f, 5.0f);   // superior limit
         private readonly Vector3 objSize = new Vector3(1.0f, 1.0f, 1.0f);  // obj size
 
-        protected Hitbox hitbox;
-
         public Matrix4 ModelMatrix { get; private set; }
 
         public obj1(Shader shader, int polygonType)
         {
             float[] vertices = new float[]{};
-            uint[] indices = new uint[]{};
             switch (polygonType)
             {
                 case 1:
                     vertices = new float[]
                     {
-                        // Positions          // Normals
-                        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, 1.0f, // Back face
-                         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, 1.0f,
-                         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, 1.0f,
-                        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, 1.0f,
+                        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, // Front face
+                        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+                        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+                        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+                        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+                        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-                        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  -1.0f, // Front face
-                         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  -1.0f,
-                         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  -1.0f,
-                        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  -1.0f,
+                        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, // Back face
+                        0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+                        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+                        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+                        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+                        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-                        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, // Left face
+                        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, // Left face
                         -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-                        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+                        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+                        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
                         -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+                        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-                         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, // Right face
-                         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-                         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-                         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+                        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, // Right face
+                        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+                        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+                        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+                        0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+                        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
                         -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, // Bottom face
-                         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-                         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+                        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+                        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+                        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
                         -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+                        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
                         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, // Top face
-                         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-                         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-                        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f
+                        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+                        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+                        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+                        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+                        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
                     };
 
-                    indices = new uint[]
-                    {
-                        0, 1, 2, 2, 3, 0, // Back face
-                        4, 5, 6, 6, 7, 4, // Front face
-                        0, 1, 5, 5, 4, 0, // Bottom face
-                        2, 3, 7, 7, 6, 2, // Top face
-                        0, 3, 7, 7, 4, 0, // Left face
-                        1, 2, 6, 6, 5, 1 // Right face
-                    };
                     break;
                 case 2:
                     // Piramid
                     vertices = new float[]
                     {
-                        // Positions         // Normals         // Texture coordinates
-                        -0.5f, 0.0f, -0.5f,  0.0f, -1.0f,  0.0f, // Base - V0
-                        0.5f, 0.0f, -0.5f,  0.0f, -1.0f,  0.0f, // Base - V1
-                        0.5f, 0.0f,  0.5f,  0.0f, -1.0f,  0.0f, // Base - V2
-                        -0.5f, 0.0f,  0.5f,  0.0f, -1.0f,  0.0f, // Base - V3
-                        0.0f, 1.0f,  0.0f,  0.0f,  1.0f,  0.0f  // Ápice - V4
+                        // Base
+                        -0.5f, 0.0f, -0.5f,  0.0f, -1.0f,  0.0f, // V0
+                        0.5f, 0.0f, -0.5f,  0.0f, -1.0f,  0.0f, // V1
+                        0.5f, 0.0f,  0.5f,  0.0f, -1.0f,  0.0f,
+                        0.5f, 0.0f,  0.5f,  0.0f, -1.0f,  0.0f,// V2
+                        -0.5f, 0.0f,  0.5f,  0.0f, -1.0f,  0.0f,
+                        -0.5f, 0.0f, -0.5f,  0.0f, -1.0f,  0.0f, // V3
+
+                        // Cara lateral 1
+                        -0.5f, 0.0f, -0.5f, -0.707f,  0.5f, -0.707f, // V0
+                        0.5f, 0.0f, -0.5f, -0.707f,  0.5f, -0.707f, // V1
+                        0.0f, 1.0f,  0.0f, -0.707f,  0.5f, -0.707f, // V4
+
+                        // Cara lateral 2
+                        0.5f, 0.0f, -0.5f,  0.707f,  0.5f, -0.707f, // V1
+                        0.5f, 0.0f,  0.5f,  0.707f,  0.5f, -0.707f, // V2
+                        0.0f, 1.0f,  0.0f,  0.707f,  0.5f, -0.707f, // V4
+
+                        // Cara lateral 3
+                        0.5f, 0.0f,  0.5f,  0.707f,  0.5f,  0.707f, // V2
+                        -0.5f, 0.0f,  0.5f,  0.707f,  0.5f,  0.707f, // V3
+                        0.0f, 1.0f,  0.0f,  0.707f,  0.5f,  0.707f, // V4
+
+                        // Cara lateral 4
+                        -0.5f, 0.0f,  0.5f, -0.707f,  0.5f,  0.707f, // V3
+                        -0.5f, 0.0f, -0.5f, -0.707f,  0.5f,  0.707f, // V0
+                        0.0f, 1.0f,  0.0f, -0.707f,  0.5f,  0.707f  // V4
                     };
 
-                    // Índices para formar los triángulos
-                    indices = new uint[]
-                    {
-                        // Base cuadrada (dos triángulos)
-                        0, 1, 2,
-                        2, 3, 0,
-
-                        // Caras laterales (cada triángulo conecta el ápice con dos vértices de la base)
-                        0, 1, 4,
-                        1, 2, 4,
-                        2, 3, 4,
-                        3, 0, 4
-                    };
                     break;
                 case 3:
-                    (vertices, indices) = GenerateSphere(sectorCount, stackCount);
+                    vertices = GenerateSphere(sectorCount, stackCount);
                     break;
             }
 
             _vertices = vertices;
-            _indices = indices;
             _shader = shader;
             rando = new Randomizer();
             //color = rando.RandomColor();
@@ -129,85 +135,90 @@ namespace ComputerGraphics3
             gravity = false;
 
             ModelMatrix = Matrix4.Identity;
-            hitbox = new Hitbox(Vector3.Zero, objSize);
 
             SetupBuffers();
         }
 
-        private (float[] vertices, uint[] indices)  GenerateSphere(int sectorCount, int stackCount)
+        private float[] GenerateSphere(int sectorCount, int stackCount)
         {
             float radius = 0.5f;
-            List<float> verticesSp = new List<float>();
-            List<uint> indicesSp = new List<uint>();
+            List<float> vertices = new List<float>();
 
-            float x, y, z, nx, ny, nz, xy;
+            float x, y, nx, ny, nz;
             float sectorStep = 2 * MathF.PI / sectorCount;
             float stackStep = MathF.PI / stackCount;
-            float sectorAngle, stackAngle;
 
-            // Generar vértices
-            for (int i = 0; i <= stackCount; ++i)
-            {
-                stackAngle = MathF.PI / 2 - i * stackStep;
-                xy = radius * MathF.Cos(stackAngle);
-                z = radius * MathF.Sin(stackAngle);
-
-                for (int j = 0; j <= sectorCount; ++j)
-                {
-                    sectorAngle = j * sectorStep;
-
-                    // Coordenadas de vértices
-                    x = xy * MathF.Cos(sectorAngle);
-                    y = xy * MathF.Sin(sectorAngle);
-                    nx = x / radius;
-                    ny = y / radius;
-                    nz = z / radius;
-
-                    verticesSp.Add(x);
-                    verticesSp.Add(y);
-                    verticesSp.Add(z);
-
-                    // Norm
-                    verticesSp.Add(nx);
-                    verticesSp.Add(ny);
-                    verticesSp.Add(nz);
-                }
-            }
-
-            // Generar índices
+            // Generar vértices y normales para cada triángulo
             for (int i = 0; i < stackCount; ++i)
             {
-                int k1 = i * (sectorCount + 1);
-                int k2 = k1 + sectorCount + 1;
+                float stackAngle1 = MathF.PI / 2 - i * stackStep;         // Ángulo para la primera fila
+                float stackAngle2 = MathF.PI / 2 - (i + 1) * stackStep;   // Ángulo para la segunda fila
 
-                for (int j = 0; j < sectorCount; ++j, ++k1, ++k2)
+                float xy1 = radius * MathF.Cos(stackAngle1); // Radio en el plano XY para la fila 1
+                float z1 = radius * MathF.Sin(stackAngle1);  // Z para la fila 1
+
+                float xy2 = radius * MathF.Cos(stackAngle2); // Radio en el plano XY para la fila 2
+                float z2 = radius * MathF.Sin(stackAngle2);  // Z para la fila 2
+
+                for (int j = 0; j < sectorCount; ++j)
                 {
-                    if (i != 0)
-                    {
-                        indicesSp.Add((uint)k1);
-                        indicesSp.Add((uint)k2);
-                        indicesSp.Add((uint)(k1 + 1));
-                    }
+                    float sectorAngle1 = j * sectorStep;           // Ángulo para el sector 1
+                    float sectorAngle2 = (j + 1) * sectorStep;     // Ángulo para el sector 2
 
-                    if (i != (stackCount - 1))
-                    {
-                        indicesSp.Add((uint)(k1 + 1));
-                        indicesSp.Add((uint)k2);
-                        indicesSp.Add((uint)(k2 + 1));
-                    }
+                    // Vértices del primer triángulo
+                    x = xy1 * MathF.Cos(sectorAngle1);
+                    y = xy1 * MathF.Sin(sectorAngle1);
+                    nx = x / radius;
+                    ny = y / radius;
+                    nz = z1 / radius;
+                    vertices.AddRange(new float[] { x, y, z1, nx, ny, nz });
+
+                    x = xy2 * MathF.Cos(sectorAngle1);
+                    y = xy2 * MathF.Sin(sectorAngle1);
+                    nx = x / radius;
+                    ny = y / radius;
+                    nz = z2 / radius;
+                    vertices.AddRange(new float[] { x, y, z2, nx, ny, nz });
+
+                    x = xy2 * MathF.Cos(sectorAngle2);
+                    y = xy2 * MathF.Sin(sectorAngle2);
+                    nx = x / radius;
+                    ny = y / radius;
+                    nz = z2 / radius;
+                    vertices.AddRange(new float[] { x, y, z2, nx, ny, nz });
+
+                    // Vértices del segundo triángulo
+                    x = xy1 * MathF.Cos(sectorAngle1);
+                    y = xy1 * MathF.Sin(sectorAngle1);
+                    nx = x / radius;
+                    ny = y / radius;
+                    nz = z1 / radius;
+                    vertices.AddRange(new float[] { x, y, z1, nx, ny, nz });
+
+                    x = xy2 * MathF.Cos(sectorAngle2);
+                    y = xy2 * MathF.Sin(sectorAngle2);
+                    nx = x / radius;
+                    ny = y / radius;
+                    nz = z2 / radius;
+                    vertices.AddRange(new float[] { x, y, z2, nx, ny, nz });
+
+                    x = xy1 * MathF.Cos(sectorAngle2);
+                    y = xy1 * MathF.Sin(sectorAngle2);
+                    nx = x / radius;
+                    ny = y / radius;
+                    nz = z1 / radius;
+                    vertices.AddRange(new float[] { x, y, z1, nx, ny, nz });
                 }
             }
 
-
-            return (verticesSp.ToArray(), indicesSp.ToArray());
-
+            return vertices.ToArray();
         }
+
 
         private void SetupBuffers()
         {
             _vao = GL.GenVertexArray();
             _vbo = GL.GenBuffer();
-            _ebo = GL.GenBuffer();
 
             GL.BindVertexArray(_vao);
 
@@ -215,9 +226,6 @@ namespace ComputerGraphics3
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices,
                 BufferUsageHint.StaticDraw);
 
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _ebo);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices,
-                BufferUsageHint.StaticDraw);
 
             var positionLocation = _shader.GetAttribLocation("aPosition");
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
@@ -233,9 +241,6 @@ namespace ComputerGraphics3
         public void Render(Camera camera, Room room)
         {
             _shader.Use();
-            //_shader.SetColor("objectColor",color);
-
-            //_texture.Use(TextureUnit.Texture0);
 
             _shader.SetMatrix4("model", ModelMatrix);
             _shader.SetMatrix4("view", camera.GetViewMatrix());
@@ -252,12 +257,13 @@ namespace ComputerGraphics3
             Vector3 ambientColor = lightColor * new Vector3(0.2f);
             Vector3 diffuseColor = lightColor * new Vector3(0.5f);
 
-            _shader.SetVector3("lights[0].position", room._pointLightPos[0]);
-            _shader.SetVector3("lights[0].ambient", ambientColor);
-            _shader.SetVector3("lights[0].diffuse", diffuseColor);
-            _shader.SetVector3("lights[0].specular", new Vector3(1.0f, 1.0f, 1.0f));
-
-
+            for (int i = 0; i < 2; i++)
+            {
+                _shader.SetVector3($"lights[{i}].position", room._pointLightPos[i]);
+                _shader.SetVector3($"lights[{i}].ambient", ambientColor);
+                _shader.SetVector3($"lights[{i}].diffuse", diffuseColor);
+                _shader.SetVector3($"lights[{i}].specular", new Vector3(1.0f, 1.0f, 1.0f));
+            }
             GL.BindVertexArray(_vao);
 
             if (wireframe)
@@ -271,15 +277,16 @@ namespace ComputerGraphics3
 
             if (visibility)
             {
-                GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 6);
             }
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.BindVertexArray(0);
+
         }
 
         public void Translate(Vector3 translation)
         {
             ModelMatrix *= Matrix4.CreateTranslation(translation);
-            UpdateHitbox();
         }
 
         public void Rotate(float angle, Vector3 axis)//?????????
@@ -326,7 +333,7 @@ namespace ComputerGraphics3
             }
 
             var position = ModelMatrix.ExtractTranslation();
-
+            var lastposition = position;
             // Colisión en el eje X
             if (position.X - objSize.X / 2 < roomMin.X || position.X + objSize.X / 2 > roomMax.X)
             {
@@ -344,47 +351,27 @@ namespace ComputerGraphics3
             {
                 position.Z = Math.Clamp(position.Z, roomMin.Z + objSize.Z / 2, roomMax.Z - objSize.Z / 2);
             }
-            // Colision furniture
-            /*if (position.Z - objSize.Z / 2 < roomMax.Z - 5 && position.Y - objSize.Y / 2 < roomMin.Y - 5)
-            {
-                position.Z = Math.Clamp(position.Z,5 + roomMin.Z + objSize.Z / 2, roomMax.Z - objSize.Z / 2);
-                position.Y = Math.Clamp(position.Y,5 + roomMin.Y + objSize.Y / 2, roomMax.Y - objSize.Y / 2);
-            }*/
+
+            // Colision table
+            if (position.Z + objSize.Z / 2 < roomMin.Z + 3.6 && position.Y + objSize.Y / 2 < roomMin.Y + 4.27) {
+                // Bloquear primero en el eje Z si intenta cruzar el límite
+                if (lastposition.Z < roomMin.Z + 3.6)
+                {
+                    position.Z = roomMin.Z + 3.6f - objSize.Z / 2;
+                }
+                // Si no cruza en Z, verifica y bloquea en Y
+                else if (lastposition.Y > roomMin.Y + 4.27)
+                {
+                    position.Y = roomMin.Y + 4.27f - objSize.Y / 2;
+                }
+            }
+
             // Actualizar la posición del cubo en el modelo
             ModelMatrix = Matrix4.CreateTranslation(position);
-            UpdateHitbox();
-            
         }
         public void DiscoMode()
         {
             ToggleColor();
-        }
-
-        public Hitbox getHitbox()
-        {
-            return hitbox;
-        }
-
-        public void UpdateHitbox()
-        {
-            Vector3 currentPos = ModelMatrix.ExtractTranslation();
-            Vector3 currentScale = ModelMatrix.ExtractScale();
-            Vector3 scaledSize = Vector3.Multiply(objSize, currentScale);
-            
-            hitbox.UpdatePosition(scaledSize, currentPos);
-        }
-        public void RenderHitbox(Camera camera, Shader hitboxShader)
-        {
-            hitboxShader.Use();
-            Matrix4 hitboxMatrix =
-                Matrix4.CreateScale(hitbox.Size) * Matrix4.CreateTranslation(hitbox.Position);
-            hitboxShader.SetMatrix4("model", hitboxMatrix);
-            hitboxShader.SetMatrix4("view", camera.GetViewMatrix());
-            hitboxShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-
-            // Renderiza como un cubo o líneas
-            GL.DrawArrays(PrimitiveType.LineLoop, 0, 24);
-
         }
     }
 }

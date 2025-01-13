@@ -10,11 +10,6 @@ namespace ComputerGraphics3
 {
     internal class table : furniture
     {
-        private Hitbox subHitboxes;
-        private Vector3 hitboxTablePos;
-        private Vector3 hitboxTableSize;
-        
-
         public table(Shader shader, Texture texture, Vector3 size, Vector3 position) :
             base(shader, texture, size, position)
         {
@@ -157,26 +152,7 @@ namespace ComputerGraphics3
             _vertices = vertices;
             _indices = indices;
 
-            hitboxTableSize = new Vector3(size.X * 0.7f, size.Y * 3.1f, size.Z * 0.9f);
-            hitboxTablePos = new Vector3(0,-1f,0) + position;
-            subHitboxes = new Hitbox(hitboxTablePos, hitboxTableSize);
-
             SetupBuffers();
-        }
-
-        public override bool CheckCollision(Hitbox other)
-        {
-            if (subHitboxes.CheckCollision(other))
-            {
-                return true; // Hay una colisión
-            }
-
-            return false; // No hay colisión
-        }
-
-        public override Hitbox getHitbox()
-        {
-            return subHitboxes;
         }
     }
 }

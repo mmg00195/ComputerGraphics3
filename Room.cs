@@ -203,14 +203,5 @@ namespace ComputerGraphics3
             _lightingShader.SetMatrix4("model", ModelMatrix);
             //UpdateBoundingBox();
         }
-        /*private void UpdateBoundingBox()
-        {
-            // Extrae la posición y escala desde la matriz de modelo
-            Vector3 position = ModelMatrix.ExtractTranslation();
-            Vector3 scale = ModelMatrix.ExtractScale();
-
-            // Actualiza la BoundingBox con la posición y escala actuales
-            boundingbox.Update(position, scale);
-        }*/
     }
 }
