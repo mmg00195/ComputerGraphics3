@@ -15,18 +15,20 @@ namespace ComputerGraphics3
 
         protected int _vao, _vbo, _ebo;
         protected Shader _shader;
-        protected Texture _texture;
+        protected List<Texture> _texture;
+        protected int currentText;
         protected Matrix4 _modelMatrix;
 
         protected Vector3 _size; // Tamaño del objeto para colisiones
         protected Vector3 _position; // Posición del objeto
 
-        public furniture(Shader shader, Texture texture, Vector3 size, Vector3 position)
+        public furniture(Shader shader, int i, List<Texture> texture, Vector3 size, Vector3 position)
         {
             _shader = shader;
             _texture = texture;
             _size = size;
             _position = position;
+            currentText = i;
 
             _modelMatrix = Matrix4.CreateTranslation(position);
 
@@ -61,7 +63,6 @@ namespace ComputerGraphics3
             GL.EnableVertexAttribArray(normalLocation);
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
 
-
             var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
             GL.EnableVertexAttribArray(texCoordLocation);
@@ -69,6 +70,11 @@ namespace ComputerGraphics3
             GL.BindVertexArray(0);
         }
 
+        public virtual void ToggleTexture()
+        {
+            currentText = (currentText + 1) % _texture.Count;
+
+        }
         public virtual void Render(Camera camera, Room room)
         {
             _shader.Use();
@@ -78,7 +84,7 @@ namespace ComputerGraphics3
 
             _shader.SetVector3("viewPos", camera.Position);
 
-            _texture.Use(TextureUnit.Texture0);
+            _texture[currentText].Use(TextureUnit.Texture0);
 
             _shader.SetInt("material.diffuse", 0);
             _shader.SetInt("material.specular", 0);

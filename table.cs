@@ -10,8 +10,8 @@ namespace ComputerGraphics3
 {
     internal class table : furniture
     {
-        public table(Shader shader, Texture texture, Vector3 size, Vector3 position) :
-            base(shader, texture, size, position)
+        public table(Shader shader,int i, List<Texture> texture, Vector3 size, Vector3 position) :
+            base(shader, i, texture, size, position)
         {
 
             // Escalamos por size.X, size.Y, size.Z

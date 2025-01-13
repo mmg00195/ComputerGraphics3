@@ -21,7 +21,8 @@ namespace ComputerGraphics3
         private Shader shader;
         private Shader shader2;
         private Texture texture;
-        private Texture table_texture;
+        private List<Texture> table_texture;
+        private int currentText;
 
         private Camera cam;
         private bool _firstMove = true;
@@ -48,6 +49,8 @@ namespace ComputerGraphics3
             polygon = new List<obj1>();
             polnum = -1;
             roomObjects = new List<furniture>();
+            table_texture = new List<Texture>();
+            currentText = 0;
             DisplayHelp();
         }
 
@@ -85,10 +88,14 @@ namespace ComputerGraphics3
 
             //polygon.Add(new obj1(shader2, rando.RandomInt(1, 4)));
 
-            table_texture = Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/beige-wooden-texture.jpg");
-            table_texture.Use(TextureUnit.Texture0);
+            table_texture.Add(Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/beige-wooden-texture.jpg"));
+            table_texture.Add(Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/dark_wooden_texture.jpg"));
+            table_texture.Add(Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/natural_wooden_texture.jpg"));
+            table_texture.Add(Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/metal_texture.jpg"));
+            currentText = 3;
+            table_texture[0].Use(TextureUnit.Texture0);
             tableShader.SetInt("material.diffuse", 0);
-            table table = new table(tableShader, table_texture, new Vector3(2.3f, 1.0f, 1.2f), new Vector3(0.0f,-2.1f,-3.7f));
+            table table = new table(tableShader, currentText, table_texture, new Vector3(2.3f, 1.0f, 1.2f), new Vector3(0.0f,-2.1f,-3.7f));
             roomObjects.Add(table);
 
         }
@@ -189,6 +196,12 @@ namespace ComputerGraphics3
                 polygon.Add(new obj1(objShader, 3));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
+            }
+
+            if (input.IsKeyPressed(Keys.T))
+            {
+                foreach(var furn in roomObjects)
+                    furn.ToggleTexture();
             }
 
             if (polnum >= 0)
@@ -382,7 +395,7 @@ namespace ComputerGraphics3
             Console.WriteLine("__________Surprises_________");
             Console.WriteLine("(Hold M) -  Surprise");
             Console.WriteLine("(Arrows) -  Surprise");
-            Console.WriteLine("() -  Surprise");
+            Console.WriteLine("(T) -  Surprise");
 
 
         }
