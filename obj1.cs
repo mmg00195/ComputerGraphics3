@@ -24,6 +24,7 @@ namespace ComputerGraphics3
         private bool visibility;
         private bool wireframe;
         private bool gravity;
+        private Vector3 gravityDirection;
         private const int GRAVITY_OFFSET = 3000;
         private int sectorCount = 36;
         private int stackCount = 18;
@@ -133,6 +134,7 @@ namespace ComputerGraphics3
             visibility = true;
             wireframe = false;
             gravity = false;
+            gravityDirection = Vector3.Zero;
 
             ModelMatrix = Matrix4.Identity;
 
@@ -289,7 +291,7 @@ namespace ComputerGraphics3
             ModelMatrix *= Matrix4.CreateTranslation(translation);
         }
 
-        public void Rotate(float angle, Vector3 axis)//?????????
+        public void Rotate(float angle, Vector3 axis)
         {
             ModelMatrix *= Matrix4.CreateFromAxisAngle(axis, MathHelper.DegreesToRadians(angle));
         }
@@ -324,12 +326,43 @@ namespace ComputerGraphics3
         public void ToggleGravity()
         {
             gravity = !gravity;
+            gravityDirection = new Vector3(0, -GRAVITY_OFFSET, 0);
+        }
+
+        public void GlobalGravity()
+        {
+            // Gravedad en el eje -Y
+            gravityDirection = new Vector3(0, -GRAVITY_OFFSET, 0); // Hacia abajo en Y
+            gravity = true;
+        }
+        public void GlobalGravityInv()
+        {
+            // Gravedad en el eje Y
+            gravityDirection = new Vector3(0, GRAVITY_OFFSET, 0); // Hacia arriba en Y
+            gravity = true;
+        }
+        public void GlobalGravityLeft()
+        {
+            // Gravedad en el eje Y
+            gravityDirection = new Vector3(-GRAVITY_OFFSET, 0, 0); // Hacia eje -X
+            gravity = true;
+        }
+        public void GlobalGravityRight()
+        {
+            // Gravedad en el eje Y
+            gravityDirection = new Vector3(GRAVITY_OFFSET, 0, 0); // Hacia eje X
+            gravity = true;
+        }
+
+        public void ResetGravity()
+        {
+            ToggleGravity();
         }
         public void Update(float deltaTime)
         {
             if (gravity)
             {
-                Translate((Vector3.Zero + new Vector3(0, -GRAVITY_OFFSET, 0) * deltaTime) * deltaTime);
+                Translate((Vector3.Zero + gravityDirection * deltaTime) * deltaTime);
             }
 
             var position = ModelMatrix.ExtractTranslation();
@@ -353,16 +386,16 @@ namespace ComputerGraphics3
             }
 
             // Colision table
-            if (position.Z + objSize.Z / 2 < roomMin.Z + 3.6 && position.Y + objSize.Y / 2 < roomMin.Y + 4.27) {
+            if (position.Z + objSize.Z / 2 < roomMin.Z + 3.6 && position.Y + objSize.Y / 2 < roomMin.Y + 4.38) {
                 // Bloquear primero en el eje Z si intenta cruzar el límite
-                if (lastposition.Z < roomMin.Z + 3.6)
+                if (lastposition.Z > roomMin.Z + 3.6)
                 {
                     position.Z = roomMin.Z + 3.6f - objSize.Z / 2;
                 }
                 // Si no cruza en Z, verifica y bloquea en Y
-                else if (lastposition.Y > roomMin.Y + 4.27)
+                else
                 {
-                    position.Y = roomMin.Y + 4.27f - objSize.Y / 2;
+                    position.Y = roomMin.Y + 4.38f - objSize.Y / 2;
                 }
             }
 

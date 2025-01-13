@@ -116,6 +116,7 @@ namespace ComputerGraphics3
 
             var input = KeyboardState;
             var mouseinput = MouseState;
+            float deltaTime = (float)e.Time;
 
             if (input.IsKeyDown(Keys.Escape))
             {
@@ -212,6 +213,49 @@ namespace ComputerGraphics3
                     polygon[polnum].ToggleGravity();
                 }
 
+                if (input.IsKeyDown(Keys.Down))
+                {
+                    foreach (obj1 pol in polygon)
+                    {
+                        pol.GlobalGravity();
+                        pol.Update(deltaTime);
+                    }
+
+                }
+                if (input.IsKeyDown(Keys.Up))
+                {
+                    foreach (obj1 pol in polygon)
+                    {
+                        pol.GlobalGravityInv();
+                        pol.Update(deltaTime);
+                    }
+
+                }
+                if (input.IsKeyDown(Keys.Left))
+                {
+                    foreach (obj1 pol in polygon)
+                    {
+                        pol.GlobalGravityLeft();
+                        pol.Update(deltaTime);
+                    }
+
+                }
+                if (input.IsKeyDown(Keys.Right))
+                {
+                    foreach (obj1 pol in polygon)
+                    {
+                        pol.GlobalGravityRight();
+                        pol.Update(deltaTime);
+                    }
+
+                }
+
+                if (input.IsKeyReleased(Keys.Up) || input.IsKeyReleased(Keys.Down) || input.IsKeyReleased(Keys.Left) || input.IsKeyReleased(Keys.Right))
+                    foreach (obj1 pol in polygon)
+                    {
+                        pol.ResetGravity();
+                    }
+
                 if (input.IsKeyPressed(Keys.LeftAlt))
                 {
                     if (polnum == polygon.Count - 1)
@@ -233,7 +277,6 @@ namespace ComputerGraphics3
                 }
                 else
                 {
-                    float deltaTime = (float)e.Time;
                     polygon[polnum].Update(deltaTime);
                 }
             }
@@ -338,7 +381,7 @@ namespace ComputerGraphics3
             Console.WriteLine("\n");
             Console.WriteLine("__________Surprises_________");
             Console.WriteLine("(Hold M) -  Surprise");
-            Console.WriteLine("() -  Surprise");
+            Console.WriteLine("(Arrows) -  Surprise");
             Console.WriteLine("() -  Surprise");
 
 
