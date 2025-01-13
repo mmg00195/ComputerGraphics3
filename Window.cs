@@ -31,8 +31,8 @@ namespace ComputerGraphics3
         private Randomizer rando;
         private Room room;
 
-        private obj1 obj1;
-        private List<obj1> polygon;
+        private Object Object;
+        private List<Object> polygon;
         int polnum;
 
         private List<furniture> roomObjects;
@@ -46,7 +46,7 @@ namespace ComputerGraphics3
             : base(gameWindowSettings, nativeWindowSettings)
         {
             rando = new Randomizer();
-            polygon = new List<obj1>();
+            polygon = new List<Object>();
             polnum = -1;
             roomObjects = new List<furniture>();
             table_texture = new List<Texture>();
@@ -86,7 +86,7 @@ namespace ComputerGraphics3
             shader2.Use();
             axes = new Axes(shader2);
 
-            //polygon.Add(new obj1(shader2, rando.RandomInt(1, 4)));
+            //polygon.Add(new Object(shader2, rando.RandomInt(1, 4)));
 
             table_texture.Add(Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/beige-wooden-texture.jpg"));
             table_texture.Add(Texture.LoadFromFile("C:/Users/manue/source/repos/ComputerGraphics3/Resources/dark_wooden_texture.jpg"));
@@ -181,19 +181,19 @@ namespace ComputerGraphics3
             }
             if (input.IsKeyPressed(Keys.D1))
             {
-                polygon.Add(new obj1(objShader, 1));
+                polygon.Add(new Object(objShader, 1));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.D2))
             {
-                polygon.Add(new obj1(objShader, 2));
+                polygon.Add(new Object(objShader, 2));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
             if (input.IsKeyPressed(Keys.D3))
             {
-                polygon.Add(new obj1(objShader, 3));
+                polygon.Add(new Object(objShader, 3));
                 polnum = polygon.Count - 1;
                 polygon[polnum].Translate(new Vector3(rando.RandomInt(-5, 5), rando.RandomInt(-5, 5), rando.RandomInt(-5, 5)));
             }
@@ -228,7 +228,7 @@ namespace ComputerGraphics3
 
                 if (input.IsKeyDown(Keys.Down))
                 {
-                    foreach (obj1 pol in polygon)
+                    foreach (Object pol in polygon)
                     {
                         pol.GlobalGravity();
                         pol.Update(deltaTime);
@@ -237,7 +237,7 @@ namespace ComputerGraphics3
                 }
                 if (input.IsKeyDown(Keys.Up))
                 {
-                    foreach (obj1 pol in polygon)
+                    foreach (Object pol in polygon)
                     {
                         pol.GlobalGravityInv();
                         pol.Update(deltaTime);
@@ -246,7 +246,7 @@ namespace ComputerGraphics3
                 }
                 if (input.IsKeyDown(Keys.Left))
                 {
-                    foreach (obj1 pol in polygon)
+                    foreach (Object pol in polygon)
                     {
                         pol.GlobalGravityLeft();
                         pol.Update(deltaTime);
@@ -255,7 +255,7 @@ namespace ComputerGraphics3
                 }
                 if (input.IsKeyDown(Keys.Right))
                 {
-                    foreach (obj1 pol in polygon)
+                    foreach (Object pol in polygon)
                     {
                         pol.GlobalGravityRight();
                         pol.Update(deltaTime);
@@ -264,7 +264,7 @@ namespace ComputerGraphics3
                 }
 
                 if (input.IsKeyReleased(Keys.Up) || input.IsKeyReleased(Keys.Down) || input.IsKeyReleased(Keys.Left) || input.IsKeyReleased(Keys.Right))
-                    foreach (obj1 pol in polygon)
+                    foreach (Object pol in polygon)
                     {
                         pol.ResetGravity();
                     }
@@ -279,7 +279,7 @@ namespace ComputerGraphics3
 
                 if (input.IsKeyDown(Keys.M))
                 {
-                    foreach (obj1 pol in polygon)
+                    foreach (Object pol in polygon)
                         pol.DiscoMode();
                 }
 
@@ -359,7 +359,7 @@ namespace ComputerGraphics3
 
             room.Render(cam);
             axes.Render(cam);
-            foreach (obj1 pol in polygon)
+            foreach (Object pol in polygon)
             {
                 pol.Render(cam, room);
             }

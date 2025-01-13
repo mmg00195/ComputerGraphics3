@@ -11,7 +11,7 @@ using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace ComputerGraphics3
 {
-    class obj1
+    class Object
     {
         private readonly float[] _vertices;
         private readonly uint[] _indices;
@@ -35,7 +35,7 @@ namespace ComputerGraphics3
 
         public Matrix4 ModelMatrix { get; private set; }
 
-        public obj1(Shader shader, int polygonType)
+        public Object(Shader shader, int polygonType)
         {
             float[] vertices = new float[]{};
             switch (polygonType)
