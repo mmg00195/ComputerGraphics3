@@ -123,4 +123,4 @@ This project is a 3D graphics application built using OpenTK, a .NET binding for
  The project includes surprise features, one for each one of the members, that can be triggered by specific key presses, enhancing user engagement and interaction.
 
 ## Conclusion
-This 3D graphics application serves as a demonstration of using OpenGL with .NET to create interactive 3D environments. It showcases various techniques such as shader programming, texture management, and user input handling, providing a solid foundation for further development in graphics programming.
+This 3D graphics application serves as a demonstration of using OpenGL with .NET to create interactive 3D environments. It showcases various techniques such as shader programming, texture management, and user input handling, providing a solid foundation for further development in graphics programming. 
