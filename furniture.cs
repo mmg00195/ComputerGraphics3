@@ -1,101 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace ComputerGraphics3
+namespace ComputerGraphics3;
+
+internal class furniture
 {
-    internal class furniture
+    protected uint[] _indices;
+    protected Matrix4 _modelMatrix;
+    protected Vector3 _position; // Obj pos
+    protected Shader _shader;
+
+    protected Vector3 _size; // obj size
+    protected List<Texture> _texture;
+
+    protected int _vao, _vbo, _ebo;
+    protected float[] _vertices;
+    protected int currentText;
+
+    public furniture(Shader shader, int i, List<Texture> texture, Vector3 size, Vector3 position)
     {
-        protected float[] _vertices;
-        protected uint[] _indices;
+        _shader = shader;
+        _texture = texture;
+        _size = size;
+        _position = position;
+        currentText = i;
 
-        protected int _vao, _vbo, _ebo;
-        protected Shader _shader;
-        protected List<Texture> _texture;
-        protected int currentText;
-        protected Matrix4 _modelMatrix;
+        _modelMatrix = Matrix4.CreateTranslation(position);
 
-        protected Vector3 _size; // Tamaño del objeto para colisiones
-        protected Vector3 _position; // Posición del objeto
+        _vertices = new float[] { };
+        _indices = new uint[] { };
 
-        public furniture(Shader shader, int i, List<Texture> texture, Vector3 size, Vector3 position)
-        {
-            _shader = shader;
-            _texture = texture;
-            _size = size;
-            _position = position;
-            currentText = i;
+        SetupBuffers();
+    }
 
-            _modelMatrix = Matrix4.CreateTranslation(position);
+    protected void SetupBuffers()
+    {
+        _vao = GL.GenVertexArray();
+        _vbo = GL.GenBuffer();
+        _ebo = GL.GenBuffer();
 
-            _vertices = new float[] { };
-            _indices = new uint[] { };
+        GL.BindVertexArray(_vao);
 
-            SetupBuffers();
-        }
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices,
+            BufferUsageHint.StaticDraw);
 
-        protected void SetupBuffers()
-        {
-            _vao = GL.GenVertexArray();
-            _vbo = GL.GenBuffer();
-            _ebo = GL.GenBuffer();
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _ebo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices,
+            BufferUsageHint.StaticDraw);
 
-            GL.BindVertexArray(_vao);
+        var positionLocation = _shader.GetAttribLocation("aPosition");
+        GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(positionLocation);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices,
-                BufferUsageHint.StaticDraw);
+        // Configura atributos de normales
+        var normalLocation = _shader.GetAttribLocation("aNormal");
+        GL.EnableVertexAttribArray(normalLocation);
+        GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float),
+            3 * sizeof(float));
 
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _ebo);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices,
-                BufferUsageHint.StaticDraw);
+        var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+        GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float),
+            6 * sizeof(float));
+        GL.EnableVertexAttribArray(texCoordLocation);
 
-            var positionLocation = _shader.GetAttribLocation("aPosition");
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(positionLocation);
+        GL.BindVertexArray(0);
+    }
 
-            // Configura atributos de normales
-            var normalLocation = _shader.GetAttribLocation("aNormal");
-            GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+    public virtual void ToggleTexture()
+    {
+        currentText = (currentText + 1) % _texture.Count;
+    }
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
-            GL.EnableVertexAttribArray(texCoordLocation);
+    public virtual void Render(Camera camera, Room room)
+    {
+        _shader.Use();
+        _shader.SetMatrix4("model", _modelMatrix);
+        _shader.SetMatrix4("view", camera.GetViewMatrix());
+        _shader.SetMatrix4("projection", camera.GetProjectionMatrix());
 
-            GL.BindVertexArray(0);
-        }
+        _shader.SetVector3("viewPos", camera.Position);
 
-        public virtual void ToggleTexture()
-        {
-            currentText = (currentText + 1) % _texture.Count;
+        _texture[currentText].Use(TextureUnit.Texture0);
 
-        }
-        public virtual void Render(Camera camera, Room room)
-        {
-            _shader.Use();
-            _shader.SetMatrix4("model", _modelMatrix);
-            _shader.SetMatrix4("view", camera.GetViewMatrix());
-            _shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+        _shader.SetInt("material.diffuse", 0);
+        _shader.SetInt("material.specular", 0);
+        _shader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+        _shader.SetFloat("material.shininess", 32.0f);
 
-            _shader.SetVector3("viewPos", camera.Position);
+        room.ConfigureLighting(_shader, camera, 1);
 
-            _texture[currentText].Use(TextureUnit.Texture0);
+        GL.BindVertexArray(_vao);
 
-            _shader.SetInt("material.diffuse", 0);
-            _shader.SetInt("material.specular", 0);
-            _shader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
-            _shader.SetFloat("material.shininess", 32.0f);
-
-            room.ConfigureLighting(_shader, camera, 1);
-
-            GL.BindVertexArray(_vao);
-
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
-        }
+        GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 }

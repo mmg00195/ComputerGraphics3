@@ -2,7 +2,7 @@
 #### Members
 - Manuel Molina García
 - Celia María Marquez Gracia
-- Vasco Costa
+- Vasco Maria Braga Costa
 ## Project Overview
 This project is a 3D graphics application built using OpenTK, a .NET binding for OpenGL. The application allows users to interact with a 3D environment, rendering various geometric shapes and furniture objects, while providing camera controls and user interactions.
 
@@ -39,6 +39,7 @@ This project is a 3D graphics application built using OpenTK, a .NET binding for
 - **Key Functions**:
   - `GetViewMatrix()`: Returns the view matrix based on the camera's position and orientation.
   - `GetProjectionMatrix()`: Returns the projection matrix for perspective rendering.
+  - `MoveTo(Vector3 newPosition)`: Modify the camera position.`
   - Properties for `Position`, `Pitch`, `Yaw`, and `Fov` to control camera settings.
 
 ### 4. Rendering Objects

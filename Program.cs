@@ -3,49 +3,45 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
-namespace ComputerGraphics3
+namespace ComputerGraphics3;
+
+public static class Program
 {
-    public static class Program
+    private const uint SWP_NOSIZE = 0x0001; // Do not change the size
+    private const uint SWP_NOZORDER = 0x0004; // Do not change Z
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GetConsoleWindow();
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy,
+        uint uFlags);
+
+    private static void MoveDebugConsoleToCorner()
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr GetConsoleWindow();
+        var consoleHandle = GetConsoleWindow();
+        if (consoleHandle != IntPtr.Zero)
+            // Cambia la posición de la consola. Ejemplo: esquina superior izquierda
+            SetWindowPos(consoleHandle, IntPtr.Zero, -700, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    }
 
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+    private static void Main()
+    {
+        MoveDebugConsoleToCorner();
 
-        private const uint SWP_NOSIZE = 0x0001;    // No cambiar el tamaño
-        private const uint SWP_NOZORDER = 0x0004;  // No cambiar el orden Z
-
-        private static void MoveDebugConsoleToCorner()
+        var nativeWindowSettings = new NativeWindowSettings
         {
-            IntPtr consoleHandle = GetConsoleWindow();
-            if (consoleHandle != IntPtr.Zero)
-            {
-                // Cambia la posición de la consola. Ejemplo: esquina superior izquierda
-                SetWindowPos(consoleHandle, IntPtr.Zero, -700, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-            }
-        }
-        private static void Main()
+            ClientSize = new Vector2i(800, 600),
+            Location = new Vector2i(700, 200),
+            Title = "Element Erasmus Graphics",
+
+            // This is needed to run on macos???
+            Flags = ContextFlags.ForwardCompatible
+        };
+
+        using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
         {
-
-            MoveDebugConsoleToCorner();
-
-            var nativeWindowSettings = new NativeWindowSettings()
-            {
-                ClientSize = new Vector2i(800, 600),
-                Location = new Vector2i(700, 200),
-                Title = "Element Erasmus Graphics",
-
-                // This is needed to run on macos???
-                Flags = ContextFlags.ForwardCompatible,
-            };
-
-            using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
-            {
-
-                window.Run();
-            }
+            window.Run();
         }
     }
 }
-    
